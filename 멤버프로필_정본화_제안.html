@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>멤버 프로필 정본화</title>
+<link rel="stylesheet" href="vendor/reveal.min.css">
+<link rel="stylesheet" href="vendor/white.min.css">
+<link rel="stylesheet" href="bni-slides.css">
+<style>
+  /* 이 덱에서만 쓰는 보조 클래스 — 공용 테마 파일은 건드리지 않는다 */
+  .h-sm { font-size: 1.5em !important; }
+  .h-xs { font-size: 1.28em !important; }
+  .src  { font-size: 0.32em; color: var(--text-tertiary); margin-top: 22px; }
+  .pair { display: flex; align-items: center; gap: 10px;
+          font-size: 0.42em; text-align: left; margin-bottom: 9px; line-height: 1.35; }
+  .pair .from { width: 150px; flex-shrink: 0; font-weight: 600; }
+  .pair .arw  { color: var(--text-tertiary); flex-shrink: 0; }
+  .pair .to   { color: var(--text-secondary); }
+  .card-accent .pair .to,
+  .card-accent .pair .arw { color: rgba(255,255,255,0.9); }
+  .chip { background: var(--surface-subtle); border-radius: 8px; padding: 12px 6px;
+          font-size: 0.4em; font-weight: 600; color: var(--text-secondary); }
+  .bar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; font-size: 0.38em; }
+  .bar-label { width: 168px; text-align: right; color: var(--text-secondary); line-height: 1.3; }
+  .bar-track { flex: 1; background: var(--surface-subtle); height: 24px; border-radius: 4px; overflow: hidden; }
+  .bar-fill  { height: 100%; background: #c9ccd2; }
+  .bar-fill.is-red { background: var(--accent); }
+  .bar-val { width: 48px; text-align: left; font-weight: 700; }
+  .badge-q { display: inline-block; padding: 5px 16px; border-radius: 6px;
+             font-size: 0.34em; font-weight: 700; margin-top: 14px; }
+  .badge-now  { background: var(--accent); color: #fff; }
+  .badge-cond { background: var(--surface-subtle); color: var(--text-tertiary); }
+  .stat-cap { font-size: 0.36em; color: var(--text-secondary); line-height: 1.45; margin-top: 8px; }
+  .note { font-size: 0.4em; color: var(--text-secondary); line-height: 1.5; text-align: left; }
+  .reveal .list-row .row-title { width: 200px; }
+</style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+  <!-- 1 표지 -->
+  <section>
+    <div class="section-label" style="color:var(--text-tertiary);">2026 Q3 업무혁신 제안</div>
+    <h1 style="font-size:2.6em; line-height:1.2;">멤버 프로필 <span class="text-accent">정본화</span></h1>
+    <div class="accent-line" style="margin:28px auto 0;"></div>
+    <div class="subtitle" style="margin-top:20px;">멤버가 시스템에서 검색되게 만들기</div>
+    <div class="subtitle" style="margin-top:4px; font-size:0.48em;">한국형 전문분야 체계 구축 및 등록 툴 파일럿</div>
+  </section>
+
+  <!-- 2 요약 -->
+  <section>
+    <div class="section-label">요약</div>
+    <h1 class="h-sm">전문분야 표기가 부정확해 멤버가 검색되지 않습니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-4">
+        <div class="card"><div class="stat-number">35%</div><div class="stat-cap">분류표에 자기 업종이 없어<br>직접 타이핑한 멤버 비율</div></div>
+        <div class="card"><div class="stat-number">18%</div><div class="stat-cap">'기타(_Other)'로<br>처리된 멤버 비율</div></div>
+        <div class="card"><div class="stat-number">8명</div><div class="stat-cap">오탈자 라벨 'Ratail'이<br>노출되고 있는 멤버 수</div></div>
+        <div class="card"><div class="stat-number">69%</div><div class="stat-cap">글로벌 매핑 공백 중<br>의료·한의 계열 비중</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.44em; font-weight:700;">요청 &nbsp;·&nbsp; 의료·한의 계열 분류표 재설계 + 등록 툴을 1개 챕터에 한정해 시범 적용</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px;">전면 도입이 아닌 파일럿입니다. 결과 지표로 다음 분기 확산 여부를 판단합니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 진단 근거 -->
+  <section>
+    <div class="section-label">진단 근거</div>
+    <h1 class="h-sm">이 진단의 기반 <span class="text-accent">파워팀 툴킷 데이터</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">기존에는 멤버가 자기 업종을 무엇으로 등록했는지 집계할 수단 자체가 없었습니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">01</div><div class="card-title" style="margin-top:6px;">파워팀 툴킷 구축</div><div class="card-desc">멤버 프로필·R파트너 현황을 구조화해 수집하는 도구를 개발</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">02</div><div class="card-title" style="margin-top:6px;">실데이터 축적</div><div class="card-desc">활동 멤버 74명, 탈퇴 87명, 활동 로그 623건 확보</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">03</div><div class="card-title" style="margin-top:6px;">분류표와 대조</div><div class="card-desc">멤버가 실제로 기재한 값과 공식 분류표 299개 항목을 교차 검증</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">04</div><div class="card-title" style="margin-top:6px;">정량 진단 도출</div><div class="card-desc">자유입력 35%, 기타 18% 등 개선 대상을 수치로 특정</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:22px; font-size:0.4em; color:var(--text-secondary);">툴이 없으면 진단이 없고, 진단이 없으면 개선 대상을 특정할 수 없습니다. 이번 제안은 지난 작업의 연장선입니다.</div>
+    </div>
+  </section>
+
+  <!-- 4 문제 시연 1 -->
+  <section>
+    <div class="section-label">문제 시연 ①</div>
+    <h1 class="h-sm">서로 다른 세 전문직이 하나의 칸에 눌려 있는 상황</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="grid-2">
+        <div class="card-accent" style="text-align:left; padding:24px 26px;">
+          <div class="card-title" style="margin-bottom:16px;">현재</div>
+          <div class="pair"><span class="from">행정사</span><span class="arw">&rarr;</span><span class="to">법무 서비스 (Legal Service Plan)</span></div>
+          <div class="pair"><span class="from">손해배상 변호사</span><span class="arw">&rarr;</span><span class="to">법무 서비스 (Legal Service Plan)</span></div>
+          <div class="pair"><span class="from">부동산·법인등기·개인파산</span><span class="arw">&rarr;</span><span class="to">법무 서비스 (Legal Service Plan)</span></div>
+          <div class="card-desc" style="margin-top:16px;">Legal Service Plan = 미국의 법률보험 상품명입니다.</div>
+        </div>
+        <div class="card" style="text-align:left; padding:24px 26px;">
+          <div class="card-title" style="margin-bottom:16px;">개선 후</div>
+          <div class="pair"><span class="from">행정사</span><span class="arw">&rarr;</span><span class="to">법률 › 행정사 › 인허가·행정심판</span></div>
+          <div class="pair"><span class="from">손해배상 변호사</span><span class="arw">&rarr;</span><span class="to">법률 › 변호사 › 손해배상·의료분쟁</span></div>
+          <div class="pair"><span class="from">부동산·법인등기·개인파산</span><span class="arw">&rarr;</span><span class="to">법률 › 법무사 › 등기·회생·파산</span></div>
+          <div class="card-desc" style="margin-top:16px;">각각 독립 항목이 되어 이제 검색·매칭됩니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="src">출처: 파워팀 툴킷 활동 멤버 데이터(3개 챕터, 74명) 중 실제 등록값</div>
+  </section>
+
+  <!-- 5 문제 시연 2 -->
+  <section>
+    <div class="section-label">문제 시연 ②</div>
+    <h1 class="h-sm">오탈자가 멤버 화면에 그대로 노출</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-2">
+        <div class="card-accent" style="text-align:left; padding:24px 26px;">
+          <div class="card-title">유통 (Ratail) › 유통 (Retail_Other)</div>
+          <div class="card-desc" style="margin-top:10px;">Retail 오타 · 현재 8명에게 노출 중</div>
+        </div>
+        <div class="card" style="text-align:left; padding:24px 26px;">
+          <div class="card-title">통신 유무선 네트워크 구축 업체가 이 칸에 등록돼 있습니다</div>
+          <div class="card-desc" style="margin-top:10px;">IT 업체가 "소매 기타"로 분류된 상태입니다.</div>
+        </div>
+      </div>
+      <div class="note" style="margin-top:24px; font-weight:700; font-size:0.42em;">같은 유형의 오배정 사례</div>
+      <div style="margin-top:12px;">
+        <div class="list-row"><div class="row-title">줄기세포 항노화 시술</div><div class="row-reason">&rarr; &nbsp;오프라인마케팅 (피부과)</div></div>
+        <div class="list-row"><div class="row-title">시각예술 전시 기획·작품 판매</div><div class="row-reason">&rarr; &nbsp;사진사 (Photographer)</div></div>
+        <div class="list-row"><div class="row-title">업무 시스템 개발</div><div class="row-reason">&rarr; &nbsp;컴퓨터&amp;프로그래밍_Other_SI SM 모바일 서비스 개발</div></div>
+        <div class="list-row"><div class="row-title">녹취록·라이브속기</div><div class="row-reason">&rarr; &nbsp;개인서비스 (자유입력)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 진단 A 분류표 -->
+  <section>
+    <div class="section-label">진단 A ㅣ 분류표</div>
+    <h1 class="h-sm">BNI Connect가 한국 실무 데이터는 담지 못하고 있습니다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">2026년 확장안(전문분야 400) 299개 항목 전수 검토 결과입니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="grid-4">
+        <div class="card"><div class="stat-number">299</div><div class="stat-cap">전문분야 항목 수<br>(대분류 18개)</div></div>
+        <div class="card"><div class="stat-number">55</div><div class="stat-cap">글로벌 매핑이 비어 있는 항목<br>= 전체의 18.4%</div></div>
+        <div class="card"><div class="stat-number">69%</div><div class="stat-cap">그 공백 중<br>의료·한의 계열 비중</div></div>
+        <div class="card"><div class="stat-number">20</div><div class="stat-cap">표기 오류 검출 건수<br>(한글·영문 오탈자)</div></div>
+      </div>
+      <div style="margin-top:22px;">
+        <div class="list-row"><div class="row-title">한국 주력 직군 부재</div><div class="row-reason">한의사(침·약재·다이어트) 3항목 전부 매핑 공백. 등록할 칸이 없습니다.</div></div>
+        <div class="list-row"><div class="row-title">한국에 없는 직군 유입</div><div class="row-reason">척추지압사·자연요법·최면 등 미국식 대체의학이 그대로 들어와 칸을 차지합니다.</div></div>
+        <div class="list-row"><div class="row-title">대분류 중복</div><div class="row-reason">「건강&amp;웰빙」과 「의료」가 동시 존재 — 정형외과·치과·안과가 양쪽에 중복 등재.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 진단 A 오역 정합성 -->
+  <section>
+    <div class="section-label">진단 A ㅣ 분류표</div>
+    <h1 class="h-sm">번역 오류와 데이터 정합성 오류가 함께 남아 있습니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="note" style="font-weight:700; font-size:0.42em; margin-bottom:12px;">오역 사례</div>
+      <div class="list-row"><div class="row-title">치위생사 (Orthodontist)</div><div class="row-reason">Orthodontist는 교정치과의사. 치위생사는 Dental Hygienist</div></div>
+      <div class="list-row"><div class="row-title">정형외과 (Osteopath)</div><div class="row-reason">Osteopath는 정골의학. 정형외과는 Orthopedics</div></div>
+      <div class="list-row"><div class="row-title">이비인후과 (Hearing/Audiology)</div><div class="row-reason">청각학은 이비인후과의 일부 영역에 불과</div></div>
+      <div class="list-row"><div class="row-title">침 (Accupuncture)</div><div class="row-reason">Acupuncture 철자 오류 + 한의사와 별개 항목으로 중복</div></div>
+      <div class="card-accent" style="text-align:left; margin-top:20px; padding:20px 26px;">
+        <div class="card-title">데이터 정합성 오류 — 기업서비스 구간(182~197행) 글로벌 매핑 열이 한 행씩 밀려 있습니다</div>
+        <div class="card-desc" style="margin-top:8px;">생활가구 → 사무가구 ㅣ 사무용가구 → 통신제품/서비스 ㅣ 기업통신 → 보안시스템 ㅣ 경호·보안 → 사무기기<br>검수 없이 붙여넣은 흔적으로, 해당 구간 16개 항목이 전부 잘못된 코드를 갖고 있습니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 진단 B 실데이터 -->
+  <section>
+    <div class="section-label">진단 B ㅣ 실데이터</div>
+    <h1 class="h-sm">멤버들은 이미 분류표를 우회하고 있습니다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">활동 멤버 74명(3개 챕터)의 실제 등록값 분석 결과입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-2">
+        <div style="padding-top:8px;">
+          <div class="bar-row"><div class="bar-label">비표준 자유입력<br>라벨 사용</div><div class="bar-track"><div class="bar-fill is-red" style="width:97%"></div></div><div class="bar-val text-accent">35%</div></div>
+          <div class="bar-row"><div class="bar-label">대분류만 있고<br>세분류 없음</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">36%</div></div>
+          <div class="bar-row"><div class="bar-label">'기타(_Other)'<br>로 처리</div><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><div class="bar-val">18%</div></div>
+          <div class="bar-row"><div class="bar-label">전문분야<br>미기재</div><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><div class="bar-val">26%</div></div>
+        </div>
+        <div>
+          <div class="card-muted" style="text-align:left; padding:18px 22px;">
+            <div style="font-size:0.42em; font-weight:700;">자유입력 오염 실물</div>
+            <div style="font-size:0.38em; color:var(--text-secondary); margin-top:8px; line-height:1.6;">"인테리어_박람회 및 행사 관련" · "제조업_판촉물" · "정책자금. 재무컨설팅" · "오프라인마케팅 (피부과)" · "중고차수출"</div>
+          </div>
+          <div class="card-muted" style="text-align:left; padding:18px 22px; margin-top:14px;">
+            <div style="font-size:0.42em; font-weight:700;">왜 이런 값이 생기나</div>
+            <div style="font-size:0.38em; color:var(--text-secondary); margin-top:8px; line-height:1.6;">분류표에 자기 업종이 없으면 멤버는 라벨 뒤에 직접 설명을 덧붙입니다. 표준화가 구조적으로 불가능한 상태입니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="src">출처: 파워팀 툴킷 활동 멤버 74명(중복·관리자 계정 제외) · 3개 챕터 표본</div>
+  </section>
+
+  <!-- 9 진단 C 버전 비교 -->
+  <section>
+    <div class="section-label">진단 C ㅣ 버전 비교</div>
+    <h1 class="h-sm">확장안을 그대로 채택하면 등록 가능 업종이 줄어듭니다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">2026-03-30 분류표와 확장안(전문분야 400)을 대조했습니다.</div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="flow-container">
+        <div class="flow-item">2026-03-30 분류표 &nbsp;305개</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">확장안 '전문분야 400' &nbsp;299개</div>
+        <div style="margin-left:16px; font-size:0.5em; color:var(--text-secondary);">이름은 확장, 실제는 축소</div>
+      </div>
+      <div class="note" style="font-weight:700; font-size:0.42em; margin-top:30px; text-align:center;">확장안에서 사라진 항목 — 모두 개원·창업이 활발한 업종입니다</div>
+      <div class="grid-4" style="margin-top:16px; gap:14px;">
+        <div class="chip">동물병원(수의사)</div><div class="chip">약국</div><div class="chip">제약회사</div><div class="chip">건강검진센터</div>
+      </div>
+      <div class="grid-4" style="margin-top:14px; gap:14px;">
+        <div class="chip">안경·콘택트렌즈</div><div class="chip">실버타운</div><div class="chip">수면케어</div><div class="chip">요양원</div>
+      </div>
+    </div>
+    <div class="src">동물병원 하나만 놓고 보아도, 현재 시스템에는 해당 업종 멤버가 등록할 칸이 없습니다.</div>
+  </section>
+
+  <!-- 10 원인 -->
+  <section>
+    <div class="section-label">원인</div>
+    <h1 class="h-sm">글로벌 분류를 정답으로 두고 한국 업종을 <span class="text-accent">끼워 맞췄기</span> 때문입니다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">개별 항목의 번역 품질 문제가 아니라, 어느 쪽을 기준으로 삼았는지의 문제입니다.</div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">1</div><div class="card-title" style="margin-top:6px;">글로벌 코드가 기준</div><div class="card-desc">본사 분류 체계를 정답으로 전제</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">2</div><div class="card-title" style="margin-top:6px;">한국 직군을 강제 배정</div><div class="card-desc">대응 항목이 없으면 유사한 칸에 밀어넣음</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">3</div><div class="card-title" style="margin-top:6px;">멤버가 우회</div><div class="card-desc">자유입력·기타 처리로 규칙을 빠져나감</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">4</div><div class="card-title" style="margin-top:6px;">검색·매칭 불가</div><div class="card-desc">데이터가 있어도 찾을 수 없는 상태</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:26px; font-size:0.42em; font-weight:700;">본사 체계를 버리자는 것이 아닙니다. 정본과 참조를 분리하자는 것입니다.</div>
+    </div>
+  </section>
+
+  <!-- 11 해결 원칙 -->
+  <section>
+    <div class="section-label">해결 원칙</div>
+    <h1 class="h-sm">한국 분류를 정본으로, 글로벌은 참조 계층으로</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">분류표 재설계 시 적용할 네 가지 규칙입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-2">
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">01</div><div class="card-title" style="margin-top:4px;">정본은 한국 분류</div><div class="card-desc">대분류 › 중분류 › 전문분야 3계층 + 불변 고유코드(MED-KOM-01 형식). 순번 의존을 없애 항목 추가 시 기존 데이터가 어긋나지 않게 합니다.</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">02</div><div class="card-title" style="margin-top:4px;">글로벌은 선택 참조 태그</div><div class="card-desc">열 이름을 '글로벌참조(리포팅용)'으로 변경. 서로 다른 한국 직군을 같은 글로벌 코드에 묶는 것을 금지합니다.</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">03</div><div class="card-title" style="margin-top:4px;">미매핑을 정상 상태로 명시</div><div class="card-desc">빈 칸 대신 '해당없음(한국 고유)' · '본사 신설요청' · '검토중' 3개 상태값을 부여합니다. 한의과는 전부 첫 번째 값입니다.</div></div>
+        <div class="card-accent" style="text-align:left;"><div style="font-size:0.4em;font-weight:800;opacity:.7;">04</div><div class="card-title" style="margin-top:4px;">'기타' 자동 생성 금지</div><div class="card-desc">대신 '신규 항목 요청' 대기열로 보내 관리자 승인 후 분류표에 정식 반영합니다.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 설계 예시 -->
+  <section>
+    <div class="section-label">설계 예시</div>
+    <h1 class="h-xs">의료 계열 재설계 — 면허 기준으로 경계를 다시 그었습니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:20px;">
+      <div class="note" style="font-weight:700; font-size:0.4em; margin-bottom:10px;">대분류 「의료」 — 의료법상 의료인·의료기관</div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">의과</div><div class="row-reason">내과 · 가정의학과 · 소아청소년과 · 산부인과 · 비뇨의학과 · 안과 · 이비인후과 · 피부과 · 성형외과 · 정형외과 · 신경외과 · 재활의학과 · 마취통증의학과 · 정신건강의학과 · 건강검진센터 · 요양병원</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">치과</div><div class="row-reason">일반치과(치료·임플란트) · 치과교정 · 구강악안면외과 · 소아치과</div></div>
+      <div class="list-row is-pick" style="padding:9px 18px;"><div class="row-title">한의과 &nbsp;<span style="font-size:0.8em;">신설</span></div><div class="row-reason">한방내과 · 침구·통증 · 한방재활 · 한방부인과 · 한방비만 &nbsp;— 글로벌참조는 전부 '해당없음(한국 고유)'</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">수의과</div><div class="row-reason">동물병원 · 반려동물 재활·검진</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">약국·의약</div><div class="row-reason">약국 · 제약 · 의약품 유통</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">의료기사·보건</div><div class="row-reason">물리치료 · 치위생 · 임상병리 · 방사선 · 작업치료 · 안경사</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">의료 인프라</div><div class="row-reason">의료기기 제조·유통 · 병원 경영컨설팅 · 의료 마케팅 · 의료분쟁</div></div>
+      <div class="note" style="margin-top:14px; font-size:0.34em; color:var(--text-tertiary);">「건강·웰니스」 분리 — 산후조리원 · 방문요양 · 요양원 · 실버타운 · 심리상담 · 퍼스널트레이닝 · 건강기능식품 등 비의료 서비스<br>경계 규칙 : '건강 결과를 파는 것'은 건강·웰니스, '외모·미용을 파는 것'은 개인서비스 — 41개 항목 → 약 52개, 중복 4건·오역 5건 제거</div>
+    </div>
+  </section>
+
+  <!-- 13 실행 범위 -->
+  <section>
+    <div class="section-label">실행 범위</div>
+    <h1 class="h-sm">의료 계열 × <span class="text-accent">1개 챕터</span> 파일럿으로 한정합니다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">이번 분기에 완결시킬 범위입니다.</div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;"><div class="card-title">왜 의료 계열부터인가</div><div class="card-desc">글로벌 매핑 공백의 69%가 이 구간에 집중<br>한의사는 등록할 칸이 아예 없음<br>동물병원·약국·검진센터·안경사가 확장안에서 소실</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">왜 1개 챕터인가</div><div class="card-desc">현재 표본은 3개 챕터 74명 — 전국 일반화 불가<br>한 챕터를 완결하면 확산 근거가 데이터로 확보됨<br>실패 시 영향 범위가 한 챕터로 제한됨</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">산출물</div><div class="card-desc">① 의료·한의 계열 분류표 v1<br>② 글로벌 변환표(본사 리포팅용) 별도 관리<br>③ 검색 선택형 등록 화면 + 신규 항목 요청 대기열<br>④ 기존 멤버 재배정 대조표</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; font-size:0.4em; color:var(--text-secondary);">뉴스레터·상담봇은 이번 범위에 포함하지 않습니다 — 데이터가 정확해진 뒤에만 켤 수 있는 기능입니다.</div>
+    </div>
+  </section>
+
+  <!-- 14 평가 기준 : 이 덱의 유일한 매트릭스 -->
+  <section>
+    <div class="section-label">평가 기준</div>
+    <h1 class="h-sm">파일럿 평가 지표를 사전에 선언합니다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">측정 가능한 지표만 사용합니다. 소속감·만족도 등 주관 지표는 제외했습니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <table class="matrix">
+        <thead><tr><th>지표</th><th>현재</th><th class="col-pick">목표</th><th>측정 방법</th></tr></thead>
+        <tbody>
+          <tr><td>전문분야 기재율</td><td>74%</td><td class="col-pick">95%</td><td>툴킷 집계</td></tr>
+          <tr><td>비표준 자유입력 라벨 비율</td><td>35%</td><td class="col-pick">0%</td><td>툴킷 집계</td></tr>
+          <tr><td>'기타(_Other)' 처리 비율</td><td>18%</td><td class="col-pick">5% 이하</td><td>툴킷 집계</td></tr>
+          <tr><td>신규 항목 요청 → 반영 리드타임</td><td>측정 불가</td><td class="col-pick">5영업일 내</td><td>요청 대기열 로그</td></tr>
+        </tbody>
+      </table>
+      <div class="card-muted" style="margin-top:22px; font-size:0.38em; color:var(--text-secondary);">R파트너 미보유 64%는 이번 지표에 포함하지 않았습니다. 분류표 개선과 인과 거리가 멀어, 다음 단계의 근거 데이터로 남겨둡니다.</div>
+    </div>
+  </section>
+
+  <!-- 15 로드맵 -->
+  <section>
+    <div class="section-label">로드맵</div>
+    <h1 class="h-sm">이후 단계는 앞 단계의 지표 달성을 조건으로 합니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 1</div><div class="card-title" style="margin-top:6px;">분류표 재설계</div><div class="card-desc">의료·한의 계열 v1<br>글로벌 변환표 분리</div><div class="badge-q badge-now">이번 분기</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 2</div><div class="card-title" style="margin-top:6px;">등록 툴 파일럿</div><div class="card-desc">검색 선택형 등록 화면<br>신규 항목 요청 대기열</div><div class="badge-q badge-now">이번 분기</div></div>
+        <div class="card-muted"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 3</div><div class="card-title" style="margin-top:6px;">뉴스레터</div><div class="card-desc">전문분야 기반 개인화 발송<br>"내 분야를 찾는 멤버" 안내</div><div class="badge-q badge-cond">조건부</div></div>
+        <div class="card-muted"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 4</div><div class="card-title" style="margin-top:6px;">단순문의 상담봇</div><div class="card-desc">분류표를 지식베이스로 활용<br>등록·절차 문의 자동 응답</div><div class="badge-q badge-cond">조건부</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.4em; font-weight:700;">게이트 조건</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px;">Phase 3·4는 Phase 1·2의 지표 달성 후에만 착수합니다. 기재율 74% 상태에서 개인화 발송을 시작하면 부정확한 추천이 멤버에게 직접 노출됩니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 시연 -->
+  <section>
+    <div class="section-label">시연</div>
+    <h1 class="h-sm">파워팀 매치 봇 — 이미 동작하는 프로토타입</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">역방향 매치는 파워팀 툴킷이 '나의 핵심 고객층'을 수집했기 때문에 가능합니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">01</div><div class="card-title" style="margin-top:6px;">키워드 하나</div><div class="card-desc">'인테리어' 한 단어 입력<br>분류·회사·고객층 동시 검색</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">02</div><div class="card-title" style="margin-top:6px;">공급 매치</div><div class="card-desc">전문분야·산업군 매치<br>인테리어 업체 3명</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">03</div><div class="card-title" style="margin-top:6px;">수요 매치</div><div class="card-desc">고객층을 역방향 매치<br>인테리어를 찾는 멤버 4명</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">04</div><div class="card-title" style="margin-top:6px;">파워팀 후보</div><div class="card-desc">공급 3명 × 수요 4명<br>한 화면에서 연결</div></div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:20px 26px;">
+        <div class="card-title">왜 Phase 1이 먼저인가</div>
+        <div class="card-desc" style="margin-top:6px;">'한의원'을 검색하면 결과가 0건입니다. 분류표에 없는 업종은 봇도 찾아줄 수 없습니다 — 봇의 정확도 상한은 Phase 1이 정합니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 한계와 요청 -->
+  <section>
+    <div class="section-label">한계와 요청</div>
+    <h1 class="h-sm">먼저 밝혀둘 두 가지 한계</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-2">
+        <div class="card" style="text-align:left;"><div class="card-title">표본이 3개 챕터 74명입니다</div><div class="card-desc">전국 현황으로 일반화할 수 없습니다. 파일럿 결과로 표본을 넓히는 것이 이번 분기의 목표입니다.</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">이탈 원인 분석이 불가능한 상태입니다</div><div class="card-desc">탈퇴 멤버 87명의 프로필 필드가 전부 비어 있습니다. 탈퇴 시 데이터가 소실되는 구조라 "등록 품질이 이탈에 영향을 주는가"를 검증할 수 없습니다. 프로필 아카이브 정책을 파일럿 범위에 포함해, 다음 분기에는 이 질문에 답할 수 있게 하겠습니다.</div></div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:22px 26px;">
+        <div class="card-title">요청 — 의료·한의 계열 분류표 재설계와 등록 툴을 1개 챕터에 시범 적용하는 것을 승인해 주시기 바랍니다.</div>
+        <div class="card-desc" style="margin-top:8px;">전면 도입이 아니며, 위 네 개 지표로 확산 여부를 판단합니다. 실패 시 영향 범위는 해당 챕터에 한정됩니다.</div>
+      </div>
+    </div>
+  </section>
+
+  </div>
+</div>
+
+<script src="vendor/reveal.min.js"></script>
+<script>
+  /* 이 덱의 설정 */
+  const DECK = {
+    name: '멤버 프로필 정본화',
+    presenter: 'JOY | Byun,SeYoon',
+    date: '2026. 08. 20',
+    logo: 'assets/BNI로고_transparent.png'
+  };
+
+  /* 크롬 자동 주입 */
+  const CHROME = `
+    <img src="${DECK.logo}" class="slide-logo" alt="BNI">
+    <div class="site-name">${DECK.name}</div>
+    <div class="copyright">COPYRIGHT&copy; BNI K. JOY CO., LTD. ALL RIGHTS RESERVED.</div>
+    <div class="presenter-info">
+      <div class="presenter-name">${DECK.presenter}</div>
+      <div class="presenter-line"></div>
+      <div class="presenter-date">${DECK.date}</div>
+    </div>
+    <div class="bottom-bar"></div>`;
+  document.querySelectorAll('.reveal .slides > section').forEach(s => {
+    s.insertAdjacentHTML('beforeend', CHROME);
+  });
+
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: false,
+    controls: true,
+    progress: true,
+    history: true,
+  });
+</script>
+</body>
+</html>
