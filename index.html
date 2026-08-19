@@ -11,7 +11,10 @@
   /* 이 덱에서만 쓰는 보조 클래스 — 공용 테마 파일은 건드리지 않는다 */
   .h-sm { font-size: 1.5em !important; }
   .h-xs { font-size: 1.28em !important; }
-  .src  { font-size: 0.32em; color: var(--text-tertiary); margin-top: 22px; }
+  .src  { font-size: 0.36em; color: var(--text-tertiary); margin-top: 22px; }
+  /* 출처가 아니라 '결론 한 줄'용 — 레드를 더 쓰지 않고 크기·굵기로만 세운다 */
+  .punch { font-size: 0.52em; font-weight: 700; color: var(--text-primary);
+           margin-top: 26px; line-height: 1.5; }
   .pair { display: flex; align-items: center; gap: 10px;
           font-size: 0.42em; text-align: left; margin-bottom: 9px; line-height: 1.35; }
   .pair .from { width: 150px; flex-shrink: 0; font-weight: 600; }
@@ -227,7 +230,7 @@
         <div class="chip">안경·콘택트렌즈</div><div class="chip">실버타운</div><div class="chip">수면케어</div><div class="chip">요양원</div>
       </div>
     </div>
-    <div class="src">동물병원 하나만 놓고 보아도, 현재 시스템에는 해당 업종 멤버가 등록할 칸이 없습니다.</div>
+    <div class="punch">동물병원 하나만 놓고 보아도, 현재 시스템에는 해당 업종 멤버가 등록할 칸이 없습니다.</div>
   </section>
 
   <!-- 10 원인 -->
