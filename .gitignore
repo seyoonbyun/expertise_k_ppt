@@ -4,3 +4,5 @@
 # 원본/백업 문서 (배포 대상 아님)
 *.pptx
 *.Google Slide.txt
+
+.vercel
