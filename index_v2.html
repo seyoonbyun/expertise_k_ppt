@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1만 명을 받치려면, 데이터가 먼저입니다</title>
+<link rel="stylesheet" href="vendor/reveal.min.css">
+<link rel="stylesheet" href="vendor/white.min.css">
+<link rel="stylesheet" href="bni-slides.css">
+<style>
+  /* 이 덱에서만 쓰는 보조 클래스 — 공용 테마 파일은 건드리지 않는다 */
+  .h-sm { font-size: 1.5em !important; }
+  .h-xs { font-size: 1.28em !important; }
+  .src  { font-size: 0.36em; color: var(--text-tertiary); margin-top: 22px; }
+  /* 출처가 아니라 '결론 한 줄'용 — 레드를 더 쓰지 않고 크기·굵기로만 세운다 */
+  .punch { font-size: 0.52em; font-weight: 700; color: var(--text-primary);
+           margin-top: 26px; line-height: 1.5; }
+  .pair { display: flex; align-items: center; gap: 10px;
+          font-size: 0.42em; text-align: left; margin-bottom: 9px; line-height: 1.35; }
+  .pair .from { width: 150px; flex-shrink: 0; font-weight: 600; }
+  .pair .arw  { color: var(--text-tertiary); flex-shrink: 0; }
+  .pair .to   { color: var(--text-secondary); }
+  .card-accent .pair .to,
+  .card-accent .pair .arw { color: rgba(255,255,255,0.9); }
+  .chip { background: var(--surface-subtle); border-radius: 8px; padding: 12px 6px;
+          font-size: 0.4em; font-weight: 600; color: var(--text-secondary); }
+  .bar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; font-size: 0.38em; }
+  .bar-label { width: 168px; text-align: right; color: var(--text-secondary); line-height: 1.3; }
+  .bar-track { flex: 1; background: var(--surface-subtle); height: 24px; border-radius: 4px; overflow: hidden; }
+  .bar-fill  { height: 100%; background: #c9ccd2; }
+  .bar-fill.is-red { background: var(--accent); }
+  .bar-val { width: 48px; text-align: left; font-weight: 700; }
+  .badge-q { display: inline-block; padding: 5px 16px; border-radius: 6px;
+             font-size: 0.34em; font-weight: 700; margin-top: 14px; }
+  .badge-now  { background: var(--accent); color: #fff; }
+  .badge-cond { background: var(--surface-subtle); color: var(--text-tertiary); }
+  .stat-cap { font-size: 0.36em; color: var(--text-secondary); line-height: 1.45; margin-top: 8px; }
+  .note { font-size: 0.4em; color: var(--text-secondary); line-height: 1.5; text-align: left; }
+  .reveal .list-row .row-title { width: 200px; }
+</style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+  <!-- ===== 2026-10 리뉴얼 : 웹사이트·데이터 운영 개선 보고용 앞부분 (R1~R11) ===== -->
+
+  <!-- R1 표지 -->
+  <section>
+    <div class="section-label" style="color:var(--text-tertiary);">2026 Q4 Joy Project</div>
+    <h1 style="font-size:2.1em; line-height:1.25;">1만 명을 받치려면,<br><span class="text-accent">데이터가 먼저</span>입니다</h1>
+    <div class="accent-line" style="margin:28px auto 0;"></div>
+    <div class="subtitle" style="margin-top:20px;">BNI K Connect — 데이터 시스템 구축 : 1만 명을 받칠 한국 운영 레이어</div>
+    <div class="subtitle" style="margin-top:4px; font-size:0.48em;">웹사이트·데이터 운영 개선 검토 &nbsp;|&nbsp; 2안(데이터 표준화)의 배경과 확장 구상</div>
+  </section>
+
+  <!-- R2 척추 : 맡기는 네 단계 -->
+  <section>
+    <div class="section-label">핵심</div>
+    <h1 class="h-sm">일을 맡길 수 있는 <span class="text-accent">네 단계</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">도구를 들이는 것과 일을 맡기는 것은 다릅니다. 맡길 수 있는 범위는 데이터가 정합니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">01</div><div class="card-title" style="margin-top:6px;">안내</div><div class="card-desc">운영 시간 · 절차 · 자주 묻는 질문</div><div class="badge-q badge-cond">지식만 있으면 가능</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">02</div><div class="card-title" style="margin-top:6px;">정보 수집</div><div class="card-desc">이름 · 요청 내용 접수 후 담당자 인계</div><div class="badge-q badge-cond">지식만 있으면 가능</div></div>
+        <div class="card-accent"><div style="font-size:0.42em;font-weight:800;opacity:.7;">03</div><div class="card-title" style="margin-top:6px;">데이터 조회</div><div class="card-desc">“내 결제 됐나요?” “갱신일은 언제죠?”</div><div class="badge-q" style="background:rgba(255,255,255,.2); color:#fff;">회원·결제 데이터 필요</div></div>
+        <div class="card-accent"><div style="font-size:0.42em;font-weight:800;opacity:.7;">04</div><div class="card-title" style="margin-top:6px;">실행</div><div class="card-desc">변경 · 발송 · 처리까지 마무리</div><div class="badge-q" style="background:rgba(255,255,255,.2); color:#fff;">데이터 + 업무 절차 필요</div></div>
+      </div>
+      <div class="grid-2" style="margin-top:20px;">
+        <div class="card-muted" style="text-align:left; padding:16px 22px;">
+          <div style="font-size:0.4em; font-weight:700;">지금</div>
+          <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">BNI Connect는 API를 열지 않습니다. 그래서 어떤 챗봇·외주 도구를 들여도 <b style="color:var(--text-primary)">안내와 접수(01~02)에서 멈춥니다.</b></div>
+        </div>
+        <div class="card-muted" style="text-align:left; padding:16px 22px;">
+          <div style="font-size:0.4em; font-weight:700;">그런데</div>
+          <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">조회할 데이터는 이미 우리 손에 있습니다 — BNI Pay의 결제·신청 기록. 이것을 표준화하면 <b style="color:var(--text-primary)">Connect API 없이도 03~04가 열립니다.</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="punch">이것이 2안(데이터 표준화)이 먼저인 이유입니다.</div>
+  </section>
+
+  <!-- R3 전사가 먼저 -->
+  <section>
+    <div class="section-label">그래서 전사가 먼저였습니다</div>
+    <h1 class="h-sm">기록되지 않은 일은 <span class="text-accent">시스템이 읽을 수 없습니다</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">여기저기 흩어진 맥락과 데이터를 먼저 모으고, 기록하고, 쪼개고, 표준화해야 시스템도 AI도 일할 수 있습니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="flow-container">
+        <div class="flow-item-active" style="line-height:1.3;">흩어진 맥락 · 데이터 자산화<br><span style="font-size:0.72em; font-weight:600; opacity:.85;">BNI Pay로 진행 중</span></div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">전사</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">진단</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">표준화</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">연결</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">활용 · AI</div>
+      </div>
+      <div class="grid-3" style="margin-top:26px;">
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">이미 한 번</div>
+          <div class="card-title" style="margin-top:4px;">전문분야에서 증명</div>
+          <div class="card-desc">활동 멤버 74명의 실제 등록값을 공식 분류표 299개 항목과 대조해, 감으로 알던 문제를 비표준 입력 35%로 특정했습니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">다음</div>
+          <div class="card-title" style="margin-top:4px;">결제 · 참여 · 운영 데이터로</div>
+          <div class="card-desc">같은 방법을 전 영역에 적용합니다. 데이터가 한곳에 기록되어야 조회도, 진단도, 활용도 가능합니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">조건</div>
+          <div class="card-title" style="margin-top:4px;">쪼개야 쓸 수 있습니다</div>
+          <div class="card-desc">업무 지식도 같습니다. 매뉴얼을 통째로 두면 시스템이 쓸 수 없고, 업무 단위로 쪼개 기록해야 조회하고 활용할 수 있습니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R4 하나의 설계 : 이미 가동 중인 세 레이어 -->
+  <section>
+    <div class="section-label">하나의 설계</div>
+    <h1 class="h-sm">따로 만든 것처럼 보였던 시스템들은 <span class="text-accent">한 줄기</span>입니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="flow-container">
+        <div class="flow-item">DB 전사 · 파워팀 툴킷</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">전문분야 진단</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">결제 · 데이터 · 프로세스</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">K Connect</div>
+      </div>
+      <div class="note" style="font-weight:700; font-size:0.42em; margin-top:24px; text-align:center;">이미 가동 중인 세 레이어</div>
+      <div class="grid-3" style="margin-top:14px;">
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">결제</div><div class="card-title" style="margin-top:4px;">BNI Pay</div><div class="card-desc">국내 PG 결제 · 가상계좌 · 현금영수증 자동 발행. 갱신 시즌 무인 결제 운영 중</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">데이터</div><div class="card-title" style="margin-top:4px;">결제 미러 시트</div><div class="card-desc">결제·신청 기록 자동 미러링, 처리 필요 시점 알림 문자 발송</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">프로세스</div><div class="card-title" style="margin-top:4px;">노션 운영 체계</div><div class="card-desc">업무 보드 · 승인 절차 가동 중. 실무 관행을 데이터베이스로 옮기는 중</div></div>
+      </div>
+    </div>
+    <div class="punch">세 레이어는 하나의 설계에서 나왔고, K Connect는 그 설계의 다음 레이어입니다.</div>
+    <div class="src">같은 구조를 CoachingTown 결제 시스템에 이식하는 중 — 한 번 설계한 구조가 다른 조직에서도 재사용되고 있습니다.</div>
+  </section>
+
+  <!-- R5 K Connect 정의 -->
+  <section>
+    <div class="section-label">BNI K Connect (가칭)</div>
+    <h1 class="h-sm">Connect를 철저히 활용해,<br><span class="text-accent">한국형 시스템으로 진화시킵니다.</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">Connect가 한국에서 제공하지 못하는 것을 수행하는 한국 운영 레이어입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-3">
+        <div class="card"><div class="card-title">국내 PG 결제</div><div class="card-desc">Connect 결제는 PayPal 전용.<br>국내 결제는 한국에서 받습니다.</div></div>
+        <div class="card"><div class="card-title">한국어 운영 · 로컬 데이터</div><div class="card-desc">한국 조직 운영에 필요한 데이터를<br>한국에서 관리합니다.</div></div>
+        <div class="card"><div class="card-title">Connect 양식으로 공급</div><div class="card-desc">결과를 Connect 입력 양식에 맞춰<br>정확히 넘깁니다 — 재입력 최소화.</div></div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:20px 26px;">
+        <div class="card-title">새 입력 항목을 늘리지 않습니다.</div>
+        <div class="card-desc" style="margin-top:8px;">이미 받는 결제·신청 데이터를 한 번만 입력하고 여러 곳에서 씁니다. 멤버가 같은 정보를 두 번 입력하지 않게 하는 것 — 입력이 늘수록 멤버의 피로가 커진다는 우려에 대한 답입니다.</div>
+      </div>
+    </div>
+    <div class="punch">문제를 쫓는 운영에서, 문제에 흔들리지 않는 시스템으로.</div>
+  </section>
+
+  <!-- R5-2 데이터 자산화 -->
+  <section>
+    <div class="section-label">데이터 자산화</div>
+    <h1 class="h-sm">Connect만으로는 알 수 없는 한국 멤버를,<br><span class="text-accent">정확히 그가 누구인지 알 수 있는 시스템</span>으로</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">Connect가 담지 못하는 대한민국 멤버의 세부 데이터를 모으고, 정성 데이터를 측정 가능한 정량 데이터로 바꿔 BNI Korea의 자산으로 쌓습니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="flow-container">
+        <div class="flow-item">정성 · 자유입력 · 상담 · 반응</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">기준표로 분류</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">정량 · 코드 · 빈도 · 추이</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">조직의 자산</div>
+      </div>
+      <div class="grid-2" style="margin-top:24px;">
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">01</div>
+          <div class="card-title" style="margin-top:4px;">Connect가 모르는 세부 데이터</div>
+          <div class="card-desc">국내 결제·지원 과정에서 이미 받고 있는 멤버 정보와 결제·참여 이력. 지금은 흩어져 있어 운영에 쓰이지 못합니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">02</div>
+          <div class="card-title" style="margin-top:4px;">정성을 정량으로</div>
+          <div class="card-desc">자유롭게 적힌 전문분야, 문의 내용, 참여 반응을 기준표로 분류해 셀 수 있는 값으로 바꿉니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="punch">감과 기억은 사람이 떠나면 사라지지만, 쌓인 데이터는 조직에 남습니다.</div>
+    <div class="src">수집·이용 동의 범위 안에서, 접근 권한 통제 하 설계·운영</div>
+  </section>
+
+  <!-- R6 왜 지금인가 -->
+  <section>
+    <div class="section-label">왜 지금인가</div>
+    <h1 class="h-sm">멤버가 세 배가 되면,<br><span class="text-accent">같은 방식으로는 운영 부담도 세 배</span></h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-3">
+        <div class="card"><div class="stat-number" style="white-space:nowrap;">약 3,400명</div><div class="stat-cap">현재 멤버</div></div>
+        <div class="card"><div class="stat-number" style="white-space:nowrap;">1만 명</div><div class="stat-cap">2028년 목표</div></div>
+        <div class="card-accent"><div class="stat-number" style="color:#fff; white-space:nowrap;">약 3배</div><div class="stat-cap" style="color:rgba(255,255,255,.85);">같은 방식이면 운영 부담도 3배</div></div>
+      </div>
+      <div style="margin-top:22px;">
+        <div class="card-muted" style="text-align:left; padding:16px 22px;">
+          <div style="font-size:0.4em; font-weight:700;">이 조직의 성장 동력은 사람입니다</div>
+          <div style="font-size:0.37em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">그것은 바뀌지 않고 바뀔 필요도 없습니다. 문제는 그 힘의 결과가 데이터로 남지 않는다는 것입니다. 관계와 노하우가 개인에게만 쌓이면, 그 사람이 흔들릴 때 챕터도 흔들립니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="src">목표 수치 : 「BNI Korea 웹사이트·데이터 운영 개선 — 실무 검토 요청 메모」(2026.10.21)</div>
+  </section>
+
+  <!-- R7 이걸로 하려는 것 -->
+  <section>
+    <div class="section-label">이걸로 하려는 것</div>
+    <h1 class="h-sm">탈퇴 후에 묻는 대신,<br><span class="text-accent">탈퇴 전에 돕습니다</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">결제 데이터는 조직에서 유일하게 모든 멤버가 거쳐 가고, 실제 결제로 검증되며, 주기마다 갱신되는 데이터입니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="flow-container">
+        <div class="flow-item">결제 · 참여 변화</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">신호 감지</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">디렉터에게 사전 알림</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">갱신</div>
+      </div>
+      <div class="grid-4" style="margin-top:24px;">
+        <div class="card-accent" style="text-align:left;"><div class="card-title">멤버 케어 시그널</div><div class="card-desc">이탈 위험을 먼저 감지해 사전 케어 대상을 알립니다</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">갱신 현황 대시보드</div><div class="card-desc">갱신 시즌 결제 · 미결제 · 입금 대기를 한눈에</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">CS 문의 분류 리포트</div><div class="card-desc">문의 유형 · 빈도 · 처리 시간 자동 집계</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">교육 신청~정산 연동</div><div class="card-desc">신청 · 결제 · 수강 · 정산을 한 흐름으로 — 통합 운영의 첫 조각</div></div>
+      </div>
+    </div>
+    <div class="punch">붕괴는 갑자기 오지 않습니다. 참여가 줄고 갱신이 늦어지는 신호가 먼저 옵니다. 데이터는 그 신호를 읽습니다.</div>
+    <div class="src">집계·내부 운영 목적, 접근 권한 통제 하 운영 · 수집 동의 범위 안에서 설계</div>
+  </section>
+
+  <!-- R8 어떤 안을 택하든 -->
+  <section>
+    <div class="section-label">선택지와의 관계</div>
+    <h1 class="h-sm">어느 안을 택하든,<br><span class="text-accent">데이터 표준화가 먼저</span>입니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">1안</div><div class="card-title" style="margin-top:4px;">웹 재정비</div><div class="card-desc">비용·기간 최소.<br>Connect 재입력은 그대로 남습니다.</div></div>
+        <div class="card-accent" style="text-align:left;"><div style="font-size:0.38em;font-weight:800;opacity:.7;">2안</div><div class="card-title" style="margin-top:4px;">재정비 + 데이터 표준화</div><div class="card-desc">재입력 시간과 오류를 줄이고,<br>모은 데이터를 운영에 씁니다.</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">3안</div><div class="card-title" style="margin-top:4px;">외주 전면 재구축</div><div class="card-desc">API가 없어 재입력은 남고,<br>유지보수가 업체에 묶일 수 있습니다.</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.42em; font-weight:700;">어느 안도 Connect 재입력을 없애지는 못합니다. 줄이는 열쇠는 데이터 표준화이고, 이는 세 안 모두의 선행 과제입니다.</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:8px; line-height:1.5;">도입은 구매가 아니라 범위를 정하는 일입니다. 외주나 외부 도구를 택해도, 무엇을 맡기고 어디까지 맡길지는 BNI 업무를 아는 쪽에서 정해야 합니다.</div>
+      </div>
+    </div>
+    <div class="src">선택지 : 실무 검토 요청 메모 6장</div>
+  </section>
+
+  <!-- R9 도입의 조건 -->
+  <section>
+    <div class="section-label">도입의 조건</div>
+    <h1 class="h-sm">어떤 도구를 들이든,<br><span class="text-accent">그 도구가 올라설 바닥이 먼저</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">챗봇이든 외주든, 도구가 일하려면 먼저 누군가 이 세 가지를 해 두어야 합니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">01 · 쪼개기</div>
+          <div class="card-title" style="margin-top:4px;">업무를 결과 기준으로 나눔</div>
+          <div class="card-desc">신규 · 갱신 · 교육 · 행사 결제가 각각 어디서 시작해 어디서 끝나는지, 어느 단계에서 사람이 판단해야 하는지</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">02 · 잇기</div>
+          <div class="card-title" style="margin-top:4px;">데이터를 한 줄로 연결</div>
+          <div class="card-desc">국내 결제 · 신청 기록 · 알림 · Connect 입력 양식이 서로 어긋나지 않게 맞물리는 구조</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">03 · 기준 세우기</div>
+          <div class="card-title" style="margin-top:4px;">사람이 바뀌어도 도는 절차</div>
+          <div class="card-desc">승인 절차 · 예외 처리 · 운영 매뉴얼. 시스템을 짓는 과정에서 함께 만들어집니다</div>
+        </div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:20px 26px;">
+        <div class="card-title">BNI Korea는 이 세 가지를 이미 하고 있습니다.</div>
+        <div class="card-desc" style="margin-top:8px;">BNI Pay · 결제 미러 시트 · 노션 운영 체계가 그 결과입니다. 어떤 도구를 더하든, 같은 설계 위에서 이어 짓습니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R10 로드맵 -->
+  <section>
+    <div class="section-label">로드맵</div>
+    <h1 class="h-sm">기반 정비에서 <span class="text-accent">한국형 통합 운영</span>까지</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">STEP 01</div><div class="card-title" style="margin-top:6px;">기반 정비</div><div class="card-desc">흩어진 맥락 · 데이터 자산화</div><div class="badge-q badge-now">진행 중</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">STEP 02</div><div class="card-title" style="margin-top:6px;">데이터 표준화</div><div class="card-desc">결제·지원 데이터 단일화<br>Connect 양식 내보내기</div><div class="badge-q badge-cond">승인 후</div></div>
+        <div class="card-muted"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">STEP 03</div><div class="card-title" style="margin-top:6px;">확장 모듈</div><div class="card-desc">멤버 케어 · 갱신 대시보드<br>리포트 발행 — 건별 승인</div><div class="badge-q badge-cond">조건부</div></div>
+        <div class="card-accent"><div style="font-size:0.4em;font-weight:800;opacity:.7;">STEP 04</div><div class="card-title" style="margin-top:6px;">한국형 통합 운영</div><div class="card-desc">결제 · 회원 · 교육 · 정산을<br>한 시스템 위에서</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.4em; font-weight:700;">경계는 검증한 만큼 넓힙니다</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">각 STEP은 앞 단계의 지표를 달성한 뒤 착수합니다. 시스템 구축의 전제는 업무 절차 정의이며, 내부·외주 어느 선택지든 이 단계를 거칩니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R11 마지막 장 → 실증 사례로 -->
+  <section>
+    <div class="section-label" style="color:var(--text-tertiary);">BNI K Connect</div>
+    <h1 style="font-size:1.7em; line-height:1.35;">Connect를 가장 잘 쓰는 것을 넘어,<br><span class="text-accent">데이터로 글로벌 BNI의 새로운 기준을 만드는 나라</span></h1>
+    <div class="accent-line" style="margin:28px auto 0;"></div>
+    <div class="subtitle" style="margin-top:20px; font-size:0.44em;">다음 장부터 &nbsp;·&nbsp; 실증 사례 「한국형 전문분야 체계 구축」(2026 Q3 업무혁신데이)</div>
+  </section>
+
+  <!-- ===== 실증 사례 : 2026 Q3 원본 덱 (내용 그대로) ===== -->
+
+  <!-- 1 표지 -->
+  <section>
+    <div class="section-label" style="color:var(--text-tertiary);">실증 사례 &nbsp;·&nbsp; 2026 Q3 제출본 &nbsp;·&nbsp; 참고</div>
+    <h1 style="font-size:2.1em; line-height:1.25;">BNI에서 한의사를 표기하는 방법,<br><span class="text-accent">14가지</span></h1>
+    <div class="accent-line" style="margin:28px auto 0;"></div>
+    <div class="subtitle" style="margin-top:20px;">한의원·한방병원 19곳이 각자 다른 이름으로 등록되어 있습니다</div>
+    <div class="subtitle" style="margin-top:4px; font-size:0.48em;">한국형 전문분야 체계 구축 및 등록 툴 파일럿</div>
+  </section>
+
+  <!-- 2 전제 : 전문분야의 무게 -->
+  <section>
+    <div class="section-label">전제</div>
+    <h1 class="h-sm">멤버가 회비로 사는 것은 <span class="text-accent">전문분야 독점권</span></h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;">
+          <div class="card-title">독점권의 경계</div>
+          <div class="text-tertiary" style="font-size:0.38em; font-weight:600; margin-top:4px;">어디까지가 내 영역인가</div>
+          <div class="card-desc">분류가 성기면 경쟁하지 않는 업종끼리 한 칸을 두고 부딪혀 들어올 수 있던 멤버가 못 들어옵니다. 분류표의 해상도가 곧 챕터의 수용 가능 멤버 수입니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="card-title">리퍼럴의 주소</div>
+          <div class="text-tertiary" style="font-size:0.38em; font-weight:600; margin-top:4px;">소개가 배달되는 곳</div>
+          <div class="card-desc">리퍼럴은 “이 일 하는 사람 누구지?”에서 시작하고, 그 질문이 도착하는 주소가 전문분야입니다. 등록할 칸이 없는 업종에는 갈 곳 없는 리퍼럴만 남습니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="card-title">파워팀의 좌표</div>
+          <div class="text-tertiary" style="font-size:0.38em; font-weight:600; margin-top:4px;">인접 업종을 잇는 지도</div>
+          <div class="card-desc">파워팀은 인접 업종의 묶음이고, 인접성을 판단하는 좌표가 전문분야입니다. 좌표가 ‘기타’인 멤버는 어느 파워팀에도 자동으로 속하지 못합니다.</div>
+        </div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:20px 26px;">
+        <div style="font-size:0.38em; font-weight:800; opacity:.7;">그래서</div>
+        <div class="card-title" style="margin-top:4px;">분류표가 오염되면 멤버가 산 독점권의 경계부터 흐려집니다.</div>
+        <div class="card-desc" style="margin-top:8px;">다음 장부터의 진단 숫자는 데이터 품질 문제가 아니라 — 회비의 대가로 약속된 것이 오염된 참조 데이터 위에서 돌고 있다는 기록입니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 요약 -->
+  <section>
+    <div class="section-label">문제 정의</div>
+    <h1 class="h-sm">전문분야가 부정확해 검색되지 않는 멤버들</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-4">
+        <div class="card"><div class="stat-number">35%</div><div class="stat-cap">분류표에 자기 업종이 없어<br>직접 타이핑한 멤버 비율</div></div>
+        <div class="card"><div class="stat-number">18%</div><div class="stat-cap">'기타(_Other)'로<br>처리된 멤버 비율</div></div>
+        <div class="card"><div class="stat-number">8명</div><div class="stat-cap">오탈자 라벨 'Ratail'이<br>노출되고 있는 멤버 수</div></div>
+        <div class="card"><div class="stat-number">69%</div><div class="stat-cap">글로벌 매핑 공백 중<br>의료·한의 계열 비중</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.44em; font-weight:700;">요청 &nbsp;·&nbsp; 의료·한의 계열 분류표 재설계 + 등록 툴을 1개 챕터에 우선 적용</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px;">승인 후 착수합니다. 확산 범위는 아래 네 개 지표가 정합니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 진단 근거 -->
+  <section>
+    <div class="section-label">진단 근거</div>
+    <h1 class="h-sm">이 진단의 기반 <span class="text-accent">파워팀 툴킷 데이터</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">기존에는 멤버가 자기 업종을 무엇으로 등록했는지 집계할 수단 자체가 없었습니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">01</div><div class="card-title" style="margin-top:6px;">파워팀 툴킷 구축</div><div class="card-desc">멤버 프로필·R파트너 현황을 구조화해 수집하는 도구를 개발</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">02</div><div class="card-title" style="margin-top:6px;">실데이터 축적</div><div class="card-desc">활동 멤버 74명, 탈퇴 87명, 활동 로그 623건 확보</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">03</div><div class="card-title" style="margin-top:6px;">분류표와 대조</div><div class="card-desc">멤버가 실제로 기재한 값과 공식 분류표 299개 항목을 교차 검증</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">04</div><div class="card-title" style="margin-top:6px;">정량 진단 도출</div><div class="card-desc">자유입력 35%, 기타 18% 등 개선 대상을 수치로 특정</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:22px; font-size:0.4em; color:var(--text-secondary);">툴이 없으면 진단이 없고, 진단이 없으면 개선 대상을 특정할 수 없습니다. 이번 제안은 지난 작업의 연장선입니다.</div>
+    </div>
+  </section>
+
+  <!-- 4 문제 시연 1 -->
+  <section>
+    <div class="section-label">분류 누락</div>
+    <h1 class="h-sm">서로 다른 세 전문직이 하나의 칸에 눌려 있는 상황</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="grid-2">
+        <div class="card-accent" style="text-align:left; padding:24px 26px;">
+          <div class="card-title" style="margin-bottom:16px;">현재</div>
+          <div class="pair"><span class="from">행정사</span><span class="arw">&rarr;</span><span class="to">법무 서비스 (Legal Service Plan)</span></div>
+          <div class="pair"><span class="from">손해배상 변호사</span><span class="arw">&rarr;</span><span class="to">법무 서비스 (Legal Service Plan)</span></div>
+          <div class="pair"><span class="from">부동산·법인등기·개인파산</span><span class="arw">&rarr;</span><span class="to">법무 서비스 (Legal Service Plan)</span></div>
+          <div class="card-desc" style="margin-top:16px;">Legal Service Plan = 미국의 법률보험 상품명입니다.</div>
+        </div>
+        <div class="card" style="text-align:left; padding:24px 26px;">
+          <div class="card-title" style="margin-bottom:16px;">개선 후</div>
+          <div class="pair"><span class="from">행정사</span><span class="arw">&rarr;</span><span class="to">법률 › 행정사 › 인허가·행정심판</span></div>
+          <div class="pair"><span class="from">손해배상 변호사</span><span class="arw">&rarr;</span><span class="to">법률 › 변호사 › 손해배상·의료분쟁</span></div>
+          <div class="pair"><span class="from">부동산·법인등기·개인파산</span><span class="arw">&rarr;</span><span class="to">법률 › 법무사 › 등기·회생·파산</span></div>
+          <div class="card-desc" style="margin-top:16px;">각각 독립 항목이 되어 이제 검색·매칭됩니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="src">출처: 파워팀 툴킷 활동 멤버 데이터(3개 챕터, 74명) 중 실제 등록값</div>
+  </section>
+
+  <!-- 5 문제 시연 2 -->
+  <section>
+    <div class="section-label">표기 오류</div>
+    <h1 class="h-sm">오탈자가 멤버 화면에 그대로 노출</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-2">
+        <div class="card-accent" style="text-align:left; padding:24px 26px;">
+          <div class="card-title">유통 (Ratail) › 유통 (Retail_Other)</div>
+          <div class="card-desc" style="margin-top:10px;">Retail 오타 · 현재 8명에게 노출 중</div>
+        </div>
+        <div class="card" style="text-align:left; padding:24px 26px;">
+          <div class="card-title">통신 유무선 네트워크 구축 업체가 이 칸에 등록돼 있습니다</div>
+          <div class="card-desc" style="margin-top:10px;">IT 업체가 "소매 기타"로 분류된 상태입니다.</div>
+        </div>
+      </div>
+      <div class="note" style="margin-top:24px; font-weight:700; font-size:0.42em;">같은 유형의 오배정 사례</div>
+      <div style="margin-top:12px;">
+        <div class="list-row"><div class="row-title">줄기세포 항노화 시술</div><div class="row-reason">&rarr; &nbsp;오프라인마케팅 (피부과)</div></div>
+        <div class="list-row"><div class="row-title">시각예술 전시 기획·작품 판매</div><div class="row-reason">&rarr; &nbsp;사진사 (Photographer)</div></div>
+        <div class="list-row"><div class="row-title">업무 시스템 개발</div><div class="row-reason">&rarr; &nbsp;컴퓨터&amp;프로그래밍_Other_SI SM 모바일 서비스 개발</div></div>
+        <div class="list-row"><div class="row-title">녹취록·라이브속기</div><div class="row-reason">&rarr; &nbsp;개인서비스 (자유입력)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 진단 A 분류표 -->
+  <section>
+    <div class="section-label">분류표 진단</div>
+    <h1 class="h-sm">BNI Connect가 한국 실무 데이터는 담지 못하고 있습니다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">BNI Connect 등록 전문분야 데이터 299개 항목을 전수 검토한 결과입니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="grid-4">
+        <div class="card"><div class="stat-number">299</div><div class="stat-cap">전문분야 항목 수<br>(대분류 18개)</div></div>
+        <div class="card"><div class="stat-number">55</div><div class="stat-cap">글로벌 매핑이 비어 있는 항목<br>= 전체의 18.4%</div></div>
+        <div class="card"><div class="stat-number">69%</div><div class="stat-cap">그 공백 중<br>의료·한의 계열 비중</div></div>
+        <div class="card"><div class="stat-number">20</div><div class="stat-cap">표기 오류 검출 건수<br>(한글·영문 오탈자)</div></div>
+      </div>
+      <div style="margin-top:22px;">
+        <div class="list-row"><div class="row-title">한의사를 고를 수 없다</div><div class="row-reason">「건강 &amp; 웰빙」 직종 38개 중 한의사가 없습니다. 가장 가까운 항목이 「침(Acupuncture)」 하나 — 그래서 한의원·한방병원 19곳이 이름을 직접 지어냈고, 그 결과가 14가지 표기입니다.</div></div>
+        <div class="list-row"><div class="row-title">한국에 없는 직군 유입</div><div class="row-reason">척추지압사·자연요법·최면 등 미국식 대체의학이 그대로 들어와 칸을 차지합니다.</div></div>
+        <div class="list-row"><div class="row-title">의료가 대분류에 없다</div><div class="row-reason">직업 29개에 「의료」가 없어 의사·치과·부인과·피부과가 전부 「건강 &amp; 웰빙」 아래 — 진료와 미용·헬스가 한 칸에 섞입니다.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 진단 A 오역 정합성 -->
+  <section>
+    <div class="section-label">번역·정합성</div>
+    <h1 class="h-sm">번역 오류와 정합성 오류가 함께 남은 상태</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">아래 네 항목은 지금 이 순간 BNI Connect 등록 화면의 선택지입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="note" style="font-weight:700; font-size:0.42em; margin-bottom:12px;">오역 사례</div>
+      <div class="list-row"><div class="row-title">치위생사 (Orthodontist)</div><div class="row-reason">Orthodontist는 교정치과의사. 치위생사는 Dental Hygienist</div></div>
+      <div class="list-row"><div class="row-title">정형외과 (Osteopath)</div><div class="row-reason">Osteopath는 정골의학. 정형외과는 Orthopedics</div></div>
+      <div class="list-row"><div class="row-title">이비인후과 (Hearing/Audiology)</div><div class="row-reason">청각학은 이비인후과의 일부 영역에 불과</div></div>
+      <div class="list-row"><div class="row-title">미학자 (Aesthetician)</div><div class="row-reason">Aesthetician은 피부관리사. 「미학자」는 철학 용어 — 「퍼스털 트레이너」·「피부영 오일」 같은 오타도 그대로 노출 중</div></div>
+      <div class="card-accent" style="text-align:left; margin-top:20px; padding:20px 26px;">
+        <div class="card-title">데이터 정합성 오류 — 기업서비스 구간(182~197행) 글로벌 매핑 열이 한 행씩 밀려 있습니다</div>
+        <div class="card-desc" style="margin-top:8px;">생활가구 → 사무가구 ㅣ 사무용가구 → 통신제품/서비스 ㅣ 기업통신 → 보안시스템 ㅣ 경호·보안 → 사무기기<br>검수 없이 붙여넣은 흔적으로, 해당 구간 16개 항목이 전부 잘못된 코드를 갖고 있습니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 문제 시연 3 : 선택지 대조 -->
+  <section>
+    <div class="section-label">문제 시연 ③</div>
+    <h1 class="h-sm">선택지 38개, 그중 한의사는 0개</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">BNI Connect 「건강 &amp; 웰빙」 직종 전체와, 한의원 19곳이 실제로 적어 넣은 이름입니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="grid-2">
+        <div class="card" style="text-align:left; padding:20px 24px;">
+          <div class="card-title">Connect가 주는 선택지 &nbsp;38개</div>
+          <div style="font-size:0.32em; color:var(--text-secondary); line-height:1.75; margin-top:10px;">가정간호 · 건강 서비스 · 건강제품 · 건강 컨시어지 서비스 · 대체의학 · 마사지 치료사 · 메디컬 스파 · 물리치료사 · 미학자 · 부인과 의사 · 상담사/심리치료 · 소프롤로지스트 · 스파 주입 치료 · 안구 관리 · 약사 · 영양사 · 영양제 · 운동시설_헬스장/클럽 · 웰니스코치 · 의료서비스 · 의사 · 이비인후과 · 임상 실험실 · 자연요법 · 정형외과 · 족부의사 · 척추지압사 · 체중 관리 · 최면 · 치과의사 · 치위생사 · <b style="color:var(--text-primary)">침(Acupuncture)</b> · 퍼스털 트레이너_휘트니스 · 피부과 의사 · 피부영 오일 · 헬스코치 · 호스피스 · 건강(기타)</div>
+        </div>
+        <div class="card-accent" style="text-align:left; padding:20px 24px;">
+          <div class="card-title">19곳이 직접 지어낸 이름 &nbsp;14가지</div>
+          <div style="font-size:0.32em; color:rgba(255,255,255,0.9); line-height:1.75; margin-top:10px;">한의사 · 한방병원 · 의료서비스 · 의료서비스/한방병원 · 한방병원/의료서비스 · 암치료 전문 한방병원 · 만성통증, 교통사고 · 건강기능보조식품(흑염소 진액) · 건강&amp;웰빙 · 건강&amp;웰빙 + 의사(Doctor/Physician) · 건강&amp;웰빙 + 의료서비스 · 건강&amp;웰빙 + 건강(기타) · 건강&amp;웰빙 - 건강(기타)_면역원기치료_한의사 · 의사(Doctor/Physician)</div>
+        </div>
+      </div>
+      <div class="punch">한의사에 가장 가까운 칸은 「침(Acupuncture)」 하나 — 그런데 전국 3,246명 중 이 칸을 고른 사람은 0명입니다.</div>
+    </div>
+  </section>
+
+  <!-- 9 미사용 항목 -->
+  <section>
+    <div class="section-label">미사용 항목</div>
+    <h1 class="h-sm">한국에 없는 직업이 차지한 칸</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">국내에 해당 자격·면허 제도가 없는 항목들입니다. 등록자 수는 전국 3,246명 기준입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="list-row"><div class="row-title">소프롤로지스트 <span style="font-size:0.8em;">Sophrologist</span></div><div class="row-reason">프랑스·스페인권의 이완요법 자격. 국내에 제도 자체가 없습니다. &nbsp;— 등록 0명</div></div>
+      <div class="list-row"><div class="row-title">척추지압사 <span style="font-size:0.8em;">Chiropractor</span></div><div class="row-reason">미국식 D.C. 면허 직종. 국내 면허 제도가 없습니다. &nbsp;— 등록 0명</div></div>
+      <div class="list-row"><div class="row-title">족부의사 <span style="font-size:0.8em;">Podiatrist</span></div><div class="row-reason">국내에 별도 면허가 없어 정형외과·피부과가 담당합니다. &nbsp;— 등록 0명</div></div>
+      <div class="list-row"><div class="row-title">자연요법 <span style="font-size:0.8em;">Naturopaths</span></div><div class="row-reason">국내 국가자격이 없습니다. &nbsp;— 등록 1명</div></div>
+      <div class="list-row"><div class="row-title">최면 <span style="font-size:0.8em;">Hypnotherapist</span></div><div class="row-reason">독립 직업군으로 성립하지 않습니다. &nbsp;— 등록 1명</div></div>
+      <div class="punch">다섯 칸의 등록자를 다 합해도 2명입니다. 그 사이 한의사는 칸이 없어 19곳이 14가지로 흩어졌습니다.</div>
+    </div>
+  </section>
+
+  <!-- 8 진단 B 실데이터 -->
+  <section>
+    <div class="section-label">등록 실태</div>
+    <h1 class="h-sm">내가 나를 소개할 방법이 시스템에 없다</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">활동 멤버 74명(3개 챕터)의 실제 등록값입니다. 규칙을 어긴 것이 아니라, 자기를 담을 칸을 찾지 못한 결과입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-2">
+        <div style="padding-top:8px;">
+          <div class="bar-row"><div class="bar-label">비표준 자유입력<br>라벨 사용</div><div class="bar-track"><div class="bar-fill is-red" style="width:97%"></div></div><div class="bar-val text-accent">35%</div></div>
+          <div class="bar-row"><div class="bar-label">대분류만 있고<br>세분류 없음</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">36%</div></div>
+          <div class="bar-row"><div class="bar-label">'기타(_Other)'<br>로 처리</div><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><div class="bar-val">18%</div></div>
+          <div class="bar-row"><div class="bar-label">전문분야<br>미기재</div><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><div class="bar-val">26%</div></div>
+        </div>
+        <div>
+          <div class="card-muted" style="text-align:left; padding:18px 22px;">
+            <div style="font-size:0.42em; font-weight:700;">자유입력 오염 실물</div>
+            <div style="font-size:0.38em; color:var(--text-secondary); margin-top:8px; line-height:1.6;">"인테리어_박람회 및 행사 관련" · "제조업_판촉물" · "정책자금. 재무컨설팅" · "오프라인마케팅 (피부과)" · "중고차수출"</div>
+          </div>
+          <div class="card-muted" style="text-align:left; padding:18px 22px; margin-top:14px;">
+            <div style="font-size:0.42em; font-weight:700;">왜 이런 값이 생기나</div>
+            <div style="font-size:0.38em; color:var(--text-secondary); margin-top:8px; line-height:1.6;">분류표에 자기 업종이 없으면 멤버는 라벨 뒤에 직접 설명을 덧붙입니다. 표준화가 구조적으로 불가능한 상태입니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="src">출처: 파워팀 툴킷 활동 멤버 74명(중복·관리자 계정 제외) · 3개 챕터 표본</div>
+  </section>
+
+  <!-- 9 진단 C 버전 비교 -->
+  <section>
+    <div class="section-label">버전 비교</div>
+    <h1 class="h-sm">등록 가능한 업종이 오히려 줄어든 상태</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">BNI Connect에 등록된 기존 전문분야 데이터 400종을 대조했습니다.</div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="flow-container">
+        <div class="flow-item">2026-03-30 분류표 &nbsp;305개</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">BNI Connect 등록 데이터 &nbsp;299개</div>
+        <div style="margin-left:16px; font-size:0.5em; color:var(--text-secondary);">이름은 400, 실제는 299</div>
+      </div>
+      <div class="note" style="font-weight:700; font-size:0.42em; margin-top:30px; text-align:center;">등록 데이터에서 빠진 업종 — 모두 개원·창업이 활발한 분야입니다</div>
+      <div class="grid-4" style="margin-top:16px; gap:14px;">
+        <div class="chip">동물병원(수의사)</div><div class="chip">약국</div><div class="chip">제약회사</div><div class="chip">건강검진센터</div>
+      </div>
+      <div class="grid-4" style="margin-top:14px; gap:14px;">
+        <div class="chip">안경·콘택트렌즈</div><div class="chip">실버타운</div><div class="chip">수면케어</div><div class="chip">요양원</div>
+      </div>
+    </div>
+    <div class="punch">동물병원 하나만 놓고 보아도, 현재 시스템에는 해당 업종 멤버가 등록할 칸이 없습니다.</div>
+  </section>
+
+  <!-- 10 원인 -->
+  <section>
+    <div class="section-label">원인</div>
+    <h1 class="h-sm">글로벌 분류를 정답으로 두고 한국 업종을 <span class="text-accent">끼워 맞췄기</span> 때문!</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">개별 항목의 번역 품질 문제가 아니라, 어느 쪽을 기준으로 삼았는지의 문제입니다.</div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">1</div><div class="card-title" style="margin-top:6px;">선택지를 본사가 소유</div><div class="card-desc">직업 › 직종 목록을 HQ가 등록하고 한국은 그 안에서만 고를 수 있음</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">2</div><div class="card-title" style="margin-top:6px;">한국 직군을 강제 배정</div><div class="card-desc">대응 항목이 없으면 유사한 칸에 밀어넣음</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">3</div><div class="card-title" style="margin-top:6px;">멤버가 우회</div><div class="card-desc">자유입력·기타 처리로 규칙을 빠져나감</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">4</div><div class="card-title" style="margin-top:6px;">검색·매칭 불가</div><div class="card-desc">데이터가 있어도 찾을 수 없는 상태</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:26px; font-size:0.42em; font-weight:700;">본사 체계를 버리자는 것이 아닙니다. 정본과 참조를 분리하자는 것입니다.</div>
+    </div>
+  </section>
+
+  <!-- 11 해결 원칙 -->
+  <section>
+    <div class="section-label">해결 원칙</div>
+    <h1 class="h-sm">한국 분류를 정본으로, 글로벌은 참조 계층으로</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">분류표 재설계 시 적용할 네 가지 규칙입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-2">
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">01</div><div class="card-title" style="margin-top:4px;">정본은 한국 분류</div><div class="card-desc">대분류 › 중분류 › 전문분야 3계층 + 불변 고유코드(MED-KOM-01 형식). 순번 의존을 없애 항목 추가 시 기존 데이터가 어긋나지 않게 합니다.</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">02</div><div class="card-title" style="margin-top:4px;">글로벌은 선택 참조 태그</div><div class="card-desc">열 이름을 '글로벌참조(리포팅용)'으로 변경. 서로 다른 한국 직군을 같은 글로벌 코드에 묶는 것을 금지합니다.</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">03</div><div class="card-title" style="margin-top:4px;">미매핑을 정상 상태로 명시</div><div class="card-desc">빈 칸 대신 '해당없음(한국 고유)' · '본사 신설요청' · '검토중' 3개 상태값을 부여합니다. 한의과는 전부 첫 번째 값입니다.</div></div>
+        <div class="card-accent" style="text-align:left;"><div style="font-size:0.4em;font-weight:800;opacity:.7;">04</div><div class="card-title" style="margin-top:4px;">'기타' 자동 생성 금지</div><div class="card-desc">대신 '신규 항목 요청' 대기열로 보내 관리자 승인 후 분류표에 정식 반영합니다.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 설계 예시 -->
+  <section>
+    <div class="section-label">설계 예시</div>
+    <h1 class="h-sm">의료 계열 재설계 — 면허 기준으로 경계 재설정</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:20px;">
+      <div class="note" style="font-weight:700; font-size:0.4em; margin-bottom:10px;">대분류 「의료」 — 의료법상 의료인·의료기관</div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">의과</div><div class="row-reason">내과 · 가정의학과 · 소아청소년과 · 산부인과 · 비뇨의학과 · 안과 · 이비인후과 · 피부과 · 성형외과 · 정형외과 · 신경외과 · 재활의학과 · 마취통증의학과 · 정신건강의학과 · 건강검진센터 · 요양병원</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">치과</div><div class="row-reason">일반치과(치료·임플란트) · 치과교정 · 구강악안면외과 · 소아치과</div></div>
+      <div class="list-row is-pick" style="padding:9px 18px;"><div class="row-title">한의과 &nbsp;<span style="font-size:0.8em;">재편</span></div><div class="row-reason">한방내과 · 침구·통증 · 한방재활 · 한방부인과 · 한방비만 &nbsp;— 글로벌참조는 전부 '해당없음(한국 고유)'</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">수의과</div><div class="row-reason">동물병원 · 반려동물 재활·검진</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">약국·의약</div><div class="row-reason">약국 · 제약 · 의약품 유통</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">의료기사·보건</div><div class="row-reason">물리치료 · 치위생 · 임상병리 · 방사선 · 작업치료 · 안경사</div></div>
+      <div class="list-row" style="padding:9px 18px;"><div class="row-title">의료 인프라</div><div class="row-reason">의료기기 제조·유통 · 병원 경영컨설팅 · 의료 마케팅 · 의료분쟁</div></div>
+      <div class="note" style="margin-top:14px; font-size:0.34em; color:var(--text-tertiary);">「건강·웰니스」 분리 — 산후조리원 · 방문요양 · 요양원 · 실버타운 · 심리상담 · 퍼스널트레이닝 · 건강기능식품 등 비의료 서비스<br>경계 규칙 : '건강 결과를 파는 것'은 건강·웰니스, '외모·미용을 파는 것'은 개인서비스 — 41개 항목 → 약 52개, 중복 4건·오역 5건 제거</div>
+    </div>
+  </section>
+
+  <!-- 13 실행 범위 -->
+  <section>
+    <div class="section-label">실행 범위</div>
+    <h1 class="h-sm">의료 계열 × <span class="text-accent">1개 챕터</span>부터</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">승인 후 첫 단계로 착수할 범위입니다.</div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;"><div class="card-title">왜 의료 계열부터인가</div><div class="card-desc">글로벌 매핑 공백의 69%가 이 구간에 집중<br>한의원 19곳이 14가지 표기로 흩어져 등록<br>동물병원·약국·검진센터·안경사가 등록 데이터에 없음</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">왜 1개 챕터인가</div><div class="card-desc">현재 표본은 3개 챕터 74명 — 전국 일반화 불가<br>한 챕터를 완결하면 확산 근거가 데이터로 확보됨<br>완결분이 그대로 다음 챕터의 적용 템플릿이 됨</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">산출물</div><div class="card-desc">① 의료·한의 계열 분류표 v1<br>② 글로벌 변환표(본사 리포팅용) 별도 관리<br>③ 검색 선택형 등록 화면 + 신규 항목 요청 대기열<br>④ 기존 멤버 재배정 대조표</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; font-size:0.4em; color:var(--text-secondary);">뉴스레터·상담봇은 이번 범위에 포함하지 않습니다 — 데이터가 정확해진 뒤에만 켤 수 있는 기능입니다.</div>
+    </div>
+  </section>
+
+  <!-- 14 평가 기준 : 이 덱의 유일한 매트릭스 -->
+  <section>
+    <div class="section-label">평가 기준</div>
+    <h1 class="h-sm">평가 지표 사전 선언</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">파일럿 착수 후 기준 · 네 개 지표 모두 측정 방법까지 함께 확정합니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <table class="matrix">
+        <thead><tr><th>지표</th><th>현재</th><th class="col-pick">목표</th><th>측정 방법</th></tr></thead>
+        <tbody>
+          <tr><td>전문분야 기재율</td><td>74%</td><td class="col-pick">95%</td><td>툴킷 집계</td></tr>
+          <tr><td>비표준 자유입력 라벨 비율</td><td>35%</td><td class="col-pick">0%</td><td>툴킷 집계</td></tr>
+          <tr><td>'기타(_Other)' 처리 비율</td><td>18%</td><td class="col-pick">5% 이하</td><td>툴킷 집계</td></tr>
+          <tr><td>신규 항목 요청 → 반영 리드타임</td><td>측정 불가</td><td class="col-pick">5영업일 내</td><td>요청 대기열 로그</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 17 플랜 -->
+  <section>
+    <div class="section-label">플랜</div>
+    <h1 class="h-xs">사용율 최상위 지역의 챕터부터 적용</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">사용율 = 전문분야를 기록한 멤버 비율(RPI 시트 기준). 현시점 90% 이상 달성 지역 5곳입니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="list-row" style="padding:11px 20px;"><div class="row-title">Incheon 인천</div><div class="row-reason">사용율 <b style="color:var(--text-primary)">97.2%</b> &nbsp;·&nbsp; RPI 1.11 &nbsp;·&nbsp; R파트너 보유 50.0%</div></div>
+      <div class="list-row" style="padding:11px 20px;"><div class="row-title">Seongnam 성남</div><div class="row-reason">사용율 <b style="color:var(--text-primary)">96.5%</b> &nbsp;·&nbsp; RPI 1.54 &nbsp;·&nbsp; R파트너 보유 62.6%</div></div>
+      <div class="list-row" style="padding:11px 20px;"><div class="row-title">Seoul Central 중구</div><div class="row-reason">사용율 <b style="color:var(--text-primary)">95.7%</b> &nbsp;·&nbsp; RPI 1.02 &nbsp;·&nbsp; R파트너 보유 45.7%</div></div>
+      <div class="list-row" style="padding:11px 20px;"><div class="row-title">Goyang 고양</div><div class="row-reason">사용율 <b style="color:var(--text-primary)">94.8%</b> &nbsp;·&nbsp; RPI 0.52 &nbsp;·&nbsp; R파트너 보유 31.2%</div></div>
+      <div class="list-row" style="padding:11px 20px;"><div class="row-title">Hwaseong 화성</div><div class="row-reason">사용율 <b style="color:var(--text-primary)">93.5%</b> &nbsp;·&nbsp; RPI 0.74 &nbsp;·&nbsp; R파트너 보유 29.0%</div></div>
+      <div class="card-accent" style="text-align:left; margin-top:20px; padding:20px 26px;">
+        <div class="card-title">사용율이 이미 높은 챕터부터 적용해, 분류표 교체 효과를 가장 빨리 확인합니다.</div>
+        <div class="card-desc" style="margin-top:8px;">평가 지표 네 개로 결과를 증명합니다. 확산 범위는 그 결과가 정합니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 로드맵 -->
+  <section>
+    <div class="section-label">다음 단계</div>
+    <h1 class="h-sm">이후의 로드맵</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:30px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 1</div><div class="card-title" style="margin-top:6px;">분류표 재설계</div><div class="card-desc">의료·한의 계열 v1<br>글로벌 변환표 분리</div><div class="badge-q badge-cond">승인 후</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 2</div><div class="card-title" style="margin-top:6px;">등록 툴 파일럿</div><div class="card-desc">검색 선택형 등록 화면<br>신규 항목 요청 대기열</div><div class="badge-q badge-cond">승인 후</div></div>
+        <div class="card-muted"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 3</div><div class="card-title" style="margin-top:6px;">뉴스레터</div><div class="card-desc">전문분야 기반 개인화 발송<br>"내 분야를 찾는 멤버" 안내</div><div class="badge-q badge-cond">조건부</div></div>
+        <div class="card-muted"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">Phase 4</div><div class="card-title" style="margin-top:6px;">단순문의 상담봇</div><div class="card-desc">분류표를 지식베이스로 활용<br>등록·절차 문의 자동 응답</div><div class="badge-q badge-cond">조건부</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.4em; font-weight:700;">게이트 조건</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px;">Phase 3·4는 Phase 1·2의 지표 달성 후에만 착수합니다. 기재율 74% 상태에서 개인화 발송을 시작하면 부정확한 추천이 멤버에게 직접 노출됩니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 설계 방법 -->
+  <section>
+    <div class="section-label">설계 방법</div>
+    <h1 class="h-sm">현장 표기에서 시작해 공식 분류로 검증</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">분류표를 위에서 내려주지 않고, 멤버가 이미 쓰고 있는 말에서 올려 만듭니다.</div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.4em;font-weight:800;">1차 자료</div>
+          <div class="card-title" style="margin-top:4px;">멤버가 스스로 쓴 표기</div>
+          <div class="card-desc">RPS 보드로 수집한, 멤버가 <b style="color:var(--text-primary)">스스로 소개되고 싶어 한</b> 전문분야 표기를 그대로 씁니다. 현장에서 실제로 쓰이는 언어입니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.4em;font-weight:800;">대조</div>
+          <div class="card-title" style="margin-top:4px;">공식 분류로 검증</div>
+          <div class="card-desc">한국표준산업분류 11차(고시 제2024-2호) · 한국표준직업분류 · 국세청 업종코드 · 의료법 등 개별 법령으로 명칭과 경계를 확인합니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.4em;font-weight:800;">산출</div>
+          <div class="card-title" style="margin-top:4px;">BNI 코리아 전용 체계</div>
+          <div class="card-desc">한국 정본 분류표를 만들고 등록 툴에 그대로 연동합니다. 글로벌 코드는 리포팅용 참조 열로 옆에 붙습니다.</div>
+        </div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:20px 26px;">
+        <div class="card-title">글로벌 코드를 정답으로 두고 한국 업종을 끼워 맞추던 순서를 뒤집습니다.</div>
+        <div class="card-desc" style="margin-top:8px;">멤버의 말이 먼저고, 공식 분류는 그 말의 경계를 다듬는 데 씁니다. 국세청 코드도 과세 목적이라 그대로 복사하지 않고 골격과 명칭만 참조합니다.</div>
+      </div>
+      <div class="src">출처 : 통계청 통계분류포털 「한국표준산업분류 제11차 개정 고시」(통계청 고시 제2024-2호, 2024-07-01 시행) · 한국표준직업분류 · 국세청 홈택스 업종코드 · 국가법령정보센터</div>
+    </div>
+  </section>
+
+
+
+
+  </div>
+</div>
+
+<script src="vendor/reveal.min.js"></script>
+<script>
+  /* 이 덱의 설정 */
+  const DECK = {
+    name: 'BNI K Connect',
+    presenter: 'JOY | Byun,SeYoon',
+    date: '2026. 10. 30',
+    logo: 'assets/bni-logo.png'
+  };
+
+  /* 크롬 자동 주입 */
+  const CHROME = `
+    <img src="${DECK.logo}" class="slide-logo" alt="BNI">
+    <div class="site-name">${DECK.name}</div>
+    <div class="copyright">COPYRIGHT&copy; BNI K. JOY CO., LTD. ALL RIGHTS RESERVED.</div>
+    <div class="presenter-info">
+      <div class="presenter-name">${DECK.presenter}</div>
+      <div class="presenter-line"></div>
+      <div class="presenter-date">${DECK.date}</div>
+    </div>
+    <div class="bottom-bar"></div>`;
+  document.querySelectorAll('.reveal .slides > section').forEach(s => {
+    s.insertAdjacentHTML('beforeend', CHROME);
+  });
+
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: false,
+    controls: true,
+    progress: true,
+    history: true,
+  });
+</script>
+</body>
+</html>
