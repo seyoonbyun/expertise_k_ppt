@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BNI에서 한의사를 표기하는 방법, 14가지</title>
+<title>AI와 일하려면, 데이터가 먼저입니다</title>
 <link rel="stylesheet" href="vendor/reveal.min.css">
 <link rel="stylesheet" href="vendor/white.min.css">
 <link rel="stylesheet" href="bni-slides.css">
@@ -44,9 +44,283 @@
 <div class="reveal">
   <div class="slides">
 
+  <!-- ===== 2026-10 리뉴얼 : 웹사이트·데이터 운영 개선 보고용 앞부분 (R1~R11) ===== -->
+
+  <!-- R1 표지 -->
+  <section>
+    <div class="section-label" style="color:var(--text-tertiary);">2026 Q4 Joy Project</div>
+    <h1 style="font-size:2.1em; line-height:1.25;">AI와 일하려면,<br><span class="text-accent">데이터가 먼저</span>입니다</h1>
+    <div class="accent-line" style="margin:28px auto 0;"></div>
+    <div class="subtitle" style="margin-top:20px;">BNI K Connect — 2028년 멤버 1만 명을 받칠 한국 운영 레이어</div>
+    <div class="subtitle" style="margin-top:4px; font-size:0.48em;">웹사이트·데이터 운영 개선 검토 &nbsp;|&nbsp; 2안(데이터 표준화)의 배경과 확장 구상</div>
+  </section>
+
+  <!-- R2 척추 : 맡기는 네 단계 -->
+  <section>
+    <div class="section-label">핵심</div>
+    <h1 class="h-sm">AI에게 일을 맡기는 <span class="text-accent">네 단계</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">도구를 들이는 것과 일을 맡기는 것은 다릅니다. 맡길 수 있는 범위는 데이터가 정합니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">01</div><div class="card-title" style="margin-top:6px;">안내</div><div class="card-desc">운영 시간 · 절차 · 자주 묻는 질문</div><div class="badge-q badge-cond">지식만 있으면 가능</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.42em;font-weight:800;">02</div><div class="card-title" style="margin-top:6px;">정보 수집</div><div class="card-desc">이름 · 요청 내용 접수 후 담당자 인계</div><div class="badge-q badge-cond">지식만 있으면 가능</div></div>
+        <div class="card-accent"><div style="font-size:0.42em;font-weight:800;opacity:.7;">03</div><div class="card-title" style="margin-top:6px;">데이터 조회</div><div class="card-desc">“내 결제 됐나요?” “갱신일은 언제죠?”</div><div class="badge-q" style="background:rgba(255,255,255,.2); color:#fff;">회원·결제 데이터 필요</div></div>
+        <div class="card-accent"><div style="font-size:0.42em;font-weight:800;opacity:.7;">04</div><div class="card-title" style="margin-top:6px;">실행</div><div class="card-desc">변경 · 발송 · 처리까지 마무리</div><div class="badge-q" style="background:rgba(255,255,255,.2); color:#fff;">데이터 + 업무 절차 필요</div></div>
+      </div>
+      <div class="grid-2" style="margin-top:20px;">
+        <div class="card-muted" style="text-align:left; padding:16px 22px;">
+          <div style="font-size:0.4em; font-weight:700;">지금</div>
+          <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">BNI Connect는 API를 열지 않습니다. 그래서 어떤 챗봇·외주 도구를 들여도 <b style="color:var(--text-primary)">안내와 접수(01~02)에서 멈춥니다.</b></div>
+        </div>
+        <div class="card-muted" style="text-align:left; padding:16px 22px;">
+          <div style="font-size:0.4em; font-weight:700;">그런데</div>
+          <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">조회할 데이터는 이미 우리 손에 있습니다 — BNI Pay의 결제·신청 기록. 이것을 표준화하면 <b style="color:var(--text-primary)">Connect API 없이도 03~04가 열립니다.</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="punch">이것이 2안(데이터 표준화)이 먼저인 이유입니다.</div>
+  </section>
+
+  <!-- R3 전사가 먼저 -->
+  <section>
+    <div class="section-label">그래서 전사가 먼저였습니다</div>
+    <h1 class="h-sm">기록되지 않은 일은 <span class="text-accent">시스템이 읽을 수 없습니다</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">여기저기 흩어진 맥락과 데이터를 먼저 모으고, 기록하고, 쪼개고, 표준화해야 시스템도 AI도 일할 수 있습니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="flow-container">
+        <div class="flow-item-active" style="line-height:1.3;">흩어진 맥락 · 데이터 자산화<br><span style="font-size:0.72em; font-weight:600; opacity:.85;">BNI Pay로 진행 중</span></div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">전사</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">진단</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">표준화</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">연결</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">활용 · AI</div>
+      </div>
+      <div class="grid-3" style="margin-top:26px;">
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">이미 한 번</div>
+          <div class="card-title" style="margin-top:4px;">전문분야에서 증명</div>
+          <div class="card-desc">활동 멤버 74명의 실제 등록값을 공식 분류표 299개 항목과 대조해, 감으로 알던 문제를 비표준 입력 35%로 특정했습니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">다음</div>
+          <div class="card-title" style="margin-top:4px;">결제 · 참여 · 운영 데이터로</div>
+          <div class="card-desc">같은 방법을 전 영역에 적용합니다. 데이터가 한곳에 기록되어야 조회도, 진단도, 활용도 가능합니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">조건</div>
+          <div class="card-title" style="margin-top:4px;">쪼개야 쓸 수 있습니다</div>
+          <div class="card-desc">업무 지식도 같습니다. 매뉴얼을 통째로 두면 시스템이 쓸 수 없고, 업무 단위로 쪼개 기록해야 조회하고 활용할 수 있습니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R4 하나의 설계 : 이미 가동 중인 세 레이어 -->
+  <section>
+    <div class="section-label">하나의 설계</div>
+    <h1 class="h-sm">따로 만든 것처럼 보였던 시스템들은 <span class="text-accent">한 줄기</span>입니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="flow-container">
+        <div class="flow-item">DB 전사 · 파워팀 툴킷</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">전문분야 진단</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">결제 · 데이터 · 프로세스</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">K Connect</div>
+      </div>
+      <div class="note" style="font-weight:700; font-size:0.42em; margin-top:24px; text-align:center;">이미 가동 중인 세 레이어</div>
+      <div class="grid-3" style="margin-top:14px;">
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">결제</div><div class="card-title" style="margin-top:4px;">BNI Pay</div><div class="card-desc">국내 PG 결제 · 가상계좌 · 현금영수증 자동 발행. 갱신 시즌 무인 결제 운영 중</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">데이터</div><div class="card-title" style="margin-top:4px;">결제 미러 시트</div><div class="card-desc">결제·신청 기록 자동 미러링, 처리 필요 시점 알림 문자 발송</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">프로세스</div><div class="card-title" style="margin-top:4px;">노션 운영 체계</div><div class="card-desc">업무 보드 · 승인 절차 가동 중. 실무 관행을 데이터베이스로 옮기는 중</div></div>
+      </div>
+    </div>
+    <div class="punch">K Connect는 새 구상이 아니라, 이미 돌고 있는 세 레이어를 하나로 잇는 일입니다.</div>
+    <div class="src">같은 구조를 CoachingTown 결제 시스템에 이식하는 중 — 한 번 설계한 구조가 다른 조직에서도 재사용되고 있습니다.</div>
+  </section>
+
+  <!-- R5 K Connect 정의 -->
+  <section>
+    <div class="section-label">BNI K Connect (가칭)</div>
+    <h1 class="h-sm">Connect를 철저히 활용해,<br><span class="text-accent">한국형 시스템으로 진화시킵니다.</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">Connect가 한국에서 제공하지 못하는 것을 수행하는 한국 운영 레이어입니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-3">
+        <div class="card"><div class="card-title">국내 PG 결제</div><div class="card-desc">Connect 결제는 PayPal 전용.<br>국내 결제는 한국에서 받습니다.</div></div>
+        <div class="card"><div class="card-title">한국어 운영 · 로컬 데이터</div><div class="card-desc">한국 조직 운영에 필요한 데이터를<br>한국에서 관리합니다.</div></div>
+        <div class="card"><div class="card-title">Connect 양식으로 공급</div><div class="card-desc">결과를 Connect 입력 양식에 맞춰<br>정확히 넘깁니다 — 재입력 최소화.</div></div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:20px 26px;">
+        <div class="card-title">새 입력 항목을 늘리지 않습니다.</div>
+        <div class="card-desc" style="margin-top:8px;">이미 받는 결제·신청 데이터를 한 번만 입력하고 여러 곳에서 씁니다. 멤버가 같은 정보를 두 번 입력하지 않게 하는 것 — 입력이 늘수록 멤버의 피로가 커진다는 우려에 대한 답입니다.</div>
+      </div>
+    </div>
+    <div class="punch">문제를 쫓는 운영에서, 문제에 흔들리지 않는 시스템으로.</div>
+  </section>
+
+  <!-- R5-2 데이터 자산화 -->
+  <section>
+    <div class="section-label">데이터 자산화</div>
+    <h1 class="h-sm">Connect만으로는 알 수 없는 한국 멤버를,<br><span class="text-accent">정확히 그가 누구인지 알 수 있는 시스템</span>으로</h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">Connect가 담지 못하는 대한민국 멤버의 세부 데이터를 모으고, 정성 데이터를 측정 가능한 정량 데이터로 바꿔 BNI Korea의 자산으로 쌓습니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="flow-container">
+        <div class="flow-item">정성 · 자유입력 · 상담 · 반응</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">기준표로 분류</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">정량 · 코드 · 빈도 · 추이</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">조직의 자산</div>
+      </div>
+      <div class="grid-2" style="margin-top:24px;">
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">01</div>
+          <div class="card-title" style="margin-top:4px;">Connect가 모르는 세부 데이터</div>
+          <div class="card-desc">국내 결제·지원 과정에서 이미 받고 있는 멤버 정보와 결제·참여 이력. 지금은 흩어져 있어 운영에 쓰이지 못합니다.</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">02</div>
+          <div class="card-title" style="margin-top:4px;">정성을 정량으로</div>
+          <div class="card-desc">자유롭게 적힌 전문분야, 문의 내용, 참여 반응을 기준표로 분류해 셀 수 있는 값으로 바꿉니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="punch">감과 기억은 사람이 떠나면 사라지지만, 쌓인 데이터는 조직에 남습니다.</div>
+    <div class="src">수집·이용 동의 범위 안에서, 접근 권한 통제 하 설계·운영</div>
+  </section>
+
+  <!-- R6 왜 지금인가 -->
+  <section>
+    <div class="section-label">왜 지금인가</div>
+    <h1 class="h-sm">멤버가 세 배가 되어도 <span class="text-accent">운영 인력은 세 배가 되지 않는 구조</span></h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-3">
+        <div class="card"><div class="stat-number" style="white-space:nowrap;">약 3,400명</div><div class="stat-cap">현재 멤버</div></div>
+        <div class="card"><div class="stat-number" style="white-space:nowrap;">1만 명</div><div class="stat-cap">2028년 목표</div></div>
+        <div class="card-accent"><div class="stat-number" style="color:#fff; white-space:nowrap;">약 3배</div><div class="stat-cap" style="color:rgba(255,255,255,.85);">같은 방식이면 운영 부담도 3배</div></div>
+      </div>
+      <div class="grid-2" style="margin-top:22px;">
+        <div class="card-muted" style="text-align:left; padding:16px 22px;">
+          <div style="font-size:0.4em; font-weight:700;">이 조직의 성장 동력은 사람입니다</div>
+          <div style="font-size:0.37em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">그것은 바뀌지 않고 바뀔 필요도 없습니다. 문제는 그 힘의 결과가 데이터로 남지 않는다는 것입니다. 관계와 노하우가 개인에게만 쌓이면, 그 사람이 흔들릴 때 챕터도 흔들립니다.</div>
+        </div>
+        <div class="card-muted" style="text-align:left; padding:16px 22px;">
+          <div style="font-size:0.4em; font-weight:700;">사람을 늘리기 전에, 구조를 바꿉니다</div>
+          <div style="font-size:0.37em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">데이터 기반 시스템 구축으로 멤버가 늘어도 운영 인력은 그만큼 늘지 않습니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="src">목표 수치 : 「BNI Korea 웹사이트·데이터 운영 개선 — 실무 검토 요청 메모」(2026.10.21)</div>
+  </section>
+
+  <!-- R7 이걸로 하려는 것 -->
+  <section>
+    <div class="section-label">이걸로 하려는 것</div>
+    <h1 class="h-sm">탈퇴 후에 묻는 대신,<br><span class="text-accent">탈퇴 전에 돕습니다</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">결제 데이터는 조직에서 유일하게 모든 멤버가 거쳐 가고, 실제 결제로 검증되며, 주기마다 갱신되는 데이터입니다.</div>
+    <div class="content-wide" style="margin-top:24px;">
+      <div class="flow-container">
+        <div class="flow-item">결제 · 참여 변화</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">신호 감지</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item">디렉터에게 사전 알림</div><div class="flow-arrow">&rarr;</div>
+        <div class="flow-item-active">갱신</div>
+      </div>
+      <div class="grid-4" style="margin-top:24px;">
+        <div class="card-accent" style="text-align:left;"><div class="card-title">멤버 케어 시그널</div><div class="card-desc">이탈 위험을 먼저 감지해 사전 케어 대상을 알립니다</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">갱신 현황 대시보드</div><div class="card-desc">갱신 시즌 결제 · 미결제 · 입금 대기를 한눈에</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">CS 문의 분류 리포트</div><div class="card-desc">문의 유형 · 빈도 · 처리 시간 자동 집계</div></div>
+        <div class="card" style="text-align:left;"><div class="card-title">교육 신청~정산 연동</div><div class="card-desc">신청 · 결제 · 수강 · 정산을 한 흐름으로 — ERP의 첫 조각</div></div>
+      </div>
+    </div>
+    <div class="punch">붕괴는 갑자기 오지 않습니다. 참여가 줄고 갱신이 늦어지는 신호가 먼저 옵니다. 데이터는 그 신호를 읽습니다.</div>
+    <div class="src">집계·내부 운영 목적, 접근 권한 통제 하 운영 · 수집 동의 범위 안에서 설계</div>
+  </section>
+
+  <!-- R8 어떤 안을 택하든 -->
+  <section>
+    <div class="section-label">선택지와의 관계</div>
+    <h1 class="h-sm">어느 안을 택하든,<br><span class="text-accent">데이터 표준화가 먼저</span>입니다</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">1안</div><div class="card-title" style="margin-top:4px;">웹 재정비</div><div class="card-desc">비용·기간 최소.<br>Connect 재입력은 그대로 남습니다.</div></div>
+        <div class="card-accent" style="text-align:left;"><div style="font-size:0.38em;font-weight:800;opacity:.7;">2안</div><div class="card-title" style="margin-top:4px;">재정비 + 데이터 표준화</div><div class="card-desc">재입력 시간과 오류를 줄이고,<br>모은 데이터를 운영에 씁니다.</div></div>
+        <div class="card" style="text-align:left;"><div class="text-tertiary" style="font-size:0.38em;font-weight:800;">3안</div><div class="card-title" style="margin-top:4px;">외주 전면 재구축</div><div class="card-desc">API가 없어 재입력은 남고,<br>유지보수가 업체에 묶일 수 있습니다.</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.42em; font-weight:700;">어느 안도 Connect 재입력을 없애지는 못합니다. 줄이는 열쇠는 데이터 표준화이고, 이는 세 안 모두의 선행 과제입니다.</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:8px; line-height:1.5;">도입은 구매가 아니라 범위를 정하는 일입니다. 외주나 외부 도구를 택해도, 무엇을 맡기고 어디까지 맡길지는 BNI 업무를 아는 쪽에서 정해야 합니다.</div>
+      </div>
+    </div>
+    <div class="src">선택지 : 실무 검토 요청 메모 6장</div>
+  </section>
+
+  <!-- R9 도입의 조건 -->
+  <section>
+    <div class="section-label">도입의 조건</div>
+    <h1 class="h-sm">어떤 도구를 들이든,<br><span class="text-accent">그 도구가 올라설 바닥이 먼저</span></h1>
+    <div class="accent-line"></div>
+    <div class="subtitle" style="font-size:0.44em; margin-top:14px;">챗봇이든 외주든, 도구가 일하려면 먼저 누군가 이 세 가지를 해 두어야 합니다.</div>
+    <div class="content-wide" style="margin-top:26px;">
+      <div class="grid-3">
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">01 · 쪼개기</div>
+          <div class="card-title" style="margin-top:4px;">업무를 결과 기준으로 나눔</div>
+          <div class="card-desc">신규 · 갱신 · 교육 · 행사 결제가 각각 어디서 시작해 어디서 끝나는지, 어느 단계에서 사람이 판단해야 하는지</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">02 · 잇기</div>
+          <div class="card-title" style="margin-top:4px;">데이터를 한 줄로 연결</div>
+          <div class="card-desc">국내 결제 · 신청 기록 · 알림 · Connect 입력 양식이 서로 어긋나지 않게 맞물리는 구조</div>
+        </div>
+        <div class="card" style="text-align:left;">
+          <div class="text-tertiary" style="font-size:0.38em;font-weight:800;">03 · 기준 세우기</div>
+          <div class="card-title" style="margin-top:4px;">사람이 바뀌어도 도는 절차</div>
+          <div class="card-desc">승인 절차 · 예외 처리 · 운영 매뉴얼. 시스템을 짓는 과정에서 함께 만들어집니다</div>
+        </div>
+      </div>
+      <div class="card-accent" style="margin-top:24px; text-align:left; padding:20px 26px;">
+        <div class="card-title">BNI Korea는 이 세 가지를 이미 하고 있습니다.</div>
+        <div class="card-desc" style="margin-top:8px;">BNI Pay · 결제 미러 시트 · 노션 운영 체계가 그 결과입니다. 어떤 도구를 더하든, 그 도구가 올라설 바닥은 이미 깔려 있습니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R10 로드맵 -->
+  <section>
+    <div class="section-label">로드맵</div>
+    <h1 class="h-sm">기반 정비에서 <span class="text-accent">한국형 운영 ERP</span>까지</h1>
+    <div class="accent-line"></div>
+    <div class="content-wide" style="margin-top:28px;">
+      <div class="grid-4">
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">STEP 01</div><div class="card-title" style="margin-top:6px;">기반 정비</div><div class="card-desc">웹 자산 대장 · 운영 매뉴얼 체계<br>운영 콘솔(조회·변경 권한 분리)</div></div>
+        <div class="card"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">STEP 02</div><div class="card-title" style="margin-top:6px;">데이터 표준화</div><div class="card-desc">결제·지원 데이터 단일화<br>Connect 양식 내보내기</div><div class="badge-q badge-cond">승인 후</div></div>
+        <div class="card-muted"><div class="text-tertiary" style="font-size:0.4em;font-weight:800;">STEP 03</div><div class="card-title" style="margin-top:6px;">확장 모듈</div><div class="card-desc">멤버 케어 · 갱신 대시보드<br>리포트 발행 — 건별 승인</div><div class="badge-q badge-cond">조건부</div></div>
+        <div class="card-accent"><div style="font-size:0.4em;font-weight:800;opacity:.7;">STEP 04</div><div class="card-title" style="margin-top:6px;">한국형 운영 ERP</div><div class="card-desc">결제 · 회원 · 교육 · 정산을<br>한 시스템 위에서</div></div>
+      </div>
+      <div class="card-muted" style="margin-top:24px; text-align:left; padding:18px 24px;">
+        <div style="font-size:0.4em; font-weight:700;">경계는 검증한 만큼 넓힙니다</div>
+        <div style="font-size:0.38em; color:var(--text-secondary); margin-top:6px; line-height:1.5;">각 STEP은 앞 단계의 지표를 달성한 뒤 착수합니다. 시스템 구축의 전제는 업무 절차 정의이며, 내부·외주 어느 선택지든 이 단계를 거칩니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R11 마지막 장 → 실증 사례로 -->
+  <section>
+    <div class="section-label" style="color:var(--text-tertiary);">BNI K Connect</div>
+    <h1 style="font-size:1.7em; line-height:1.35;">Connect를 가장 잘 쓰는 것을 넘어,<br><span class="text-accent">데이터로 글로벌 BNI의 새로운 기준을 만드는 나라</span></h1>
+    <div class="accent-line" style="margin:28px auto 0;"></div>
+    <div class="subtitle" style="margin-top:20px; font-size:0.44em;">다음 장부터 &nbsp;·&nbsp; 실증 사례 「한국형 전문분야 체계 구축」(2026 Q3 업무혁신데이)</div>
+  </section>
+
+  <!-- ===== 실증 사례 : 2026 Q3 원본 덱 (내용 그대로) ===== -->
+
   <!-- 1 표지 -->
   <section>
-    <div class="section-label" style="color:var(--text-tertiary);">2026 Q3 Joy Project</div>
+    <div class="section-label" style="color:var(--text-tertiary);">실증 사례 &nbsp;·&nbsp; 2026 Q3 Joy Project</div>
     <h1 style="font-size:2.1em; line-height:1.25;">BNI에서 한의사를 표기하는 방법,<br><span class="text-accent">14가지</span></h1>
     <div class="accent-line" style="margin:28px auto 0;"></div>
     <div class="subtitle" style="margin-top:20px;">한의원·한방병원 19곳이 각자 다른 이름으로 등록되어 있습니다</div>
@@ -458,31 +732,6 @@
     </div>
   </section>
 
-  <!-- 20 시연 -->
-  <section>
-    <div class="section-label">시연</div>
-    <h1 class="h-sm">파워팀 매치 봇</h1>
-    <div class="accent-line"></div>
-    <div class="content-wide" style="margin-top:20px;">
-      <div style="display:grid; grid-template-columns:330px 1fr; gap:34px; align-items:center;">
-        <div style="text-align:center;">
-          <img src="assets/matchbot-mockup.png" alt="파워팀 매치 봇 모바일 화면"
-               style="width:100%; max-height:400px; object-fit:contain;">
-          <div class="text-tertiary" style="font-size:0.32em; margin-top:8px;">모바일 적용 구상</div>
-        </div>
-        <div>
-          <div class="list-row" style="padding:9px 18px;"><div class="row-title">01 &nbsp;키워드 하나</div><div class="row-reason">'인테리어' 한 단어 입력 — 분류·회사·고객층 동시 검색</div></div>
-          <div class="list-row" style="padding:9px 18px;"><div class="row-title">02 &nbsp;공급 매치</div><div class="row-reason">전문분야·산업군으로 매치 — 인테리어 업체 3명</div></div>
-          <div class="list-row" style="padding:9px 18px;"><div class="row-title">03 &nbsp;수요 매치</div><div class="row-reason">'핵심 고객층'을 역방향으로 매치 — 인테리어를 찾는 멤버 4명</div></div>
-          <div class="list-row" style="padding:9px 18px;"><div class="row-title">04 &nbsp;파워팀 후보</div><div class="row-reason">공급 3명 × 수요 4명을 한 화면에서 연결</div></div>
-          <div class="card-accent" style="text-align:left; margin-top:14px; padding:16px 22px;">
-            <div class="card-title">AX DB 전사 및 파워팀 툴킷, 전문분야 데이터를 취합한 이유</div>
-            <div class="card-desc" style="margin-top:6px;">흩어져 있던 데이터를 한곳에 모았기 때문에 이 매칭이 가능합니다. 남은 병목은 분류표입니다 — '한의원'을 검색하면 결과는 아직 0건입니다.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
 
 
@@ -493,9 +742,9 @@
 <script>
   /* 이 덱의 설정 */
   const DECK = {
-    name: '전문분야 등록 체계',
+    name: 'BNI K Connect',
     presenter: 'JOY | Byun,SeYoon',
-    date: '2026. 08. 20',
+    date: '2026. 10. 30',
     logo: 'assets/bni-logo.png'
   };
 
